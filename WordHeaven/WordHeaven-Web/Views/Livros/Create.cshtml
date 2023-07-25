@@ -1,0 +1,78 @@
+﻿@model WordHeaven_Web.Data.Entity.Livro
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Create</h1>
+
+<h4>Livro</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Titulo" class="control-label"></label>
+                <input asp-for="Titulo" class="form-control" />
+                <span asp-validation-for="Titulo" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Autor" class="control-label"></label>
+                <input asp-for="Autor" class="form-control" />
+                <span asp-validation-for="Autor" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Editora" class="control-label"></label>
+                <input asp-for="Editora" class="form-control" />
+                <span asp-validation-for="Editora" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="AnoDePublicacao" class="control-label"></label>
+                <input asp-for="AnoDePublicacao" class="form-control" />
+                <span asp-validation-for="AnoDePublicacao" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Resumo" class="control-label"></label>
+                <input asp-for="Resumo" class="form-control" />
+                <span asp-validation-for="Resumo" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Idioma" class="control-label"></label>
+                <input asp-for="Idioma" class="form-control" />
+                <span asp-validation-for="Idioma" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="NumeroPaginas" class="control-label"></label>
+                <input asp-for="NumeroPaginas" class="form-control" />
+                <span asp-validation-for="NumeroPaginas" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Tematica" class="control-label"></label>
+                <input asp-for="Tematica" class="form-control" />
+                <span asp-validation-for="Tematica" class="text-danger"></span>
+            </div>
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="Desconto" /> @Html.DisplayNameFor(model => model.Desconto)
+                </label>
+            </div>
+            <div class="form-group">
+                <label asp-for="Valor" class="control-label"></label>
+                <input asp-for="Valor" class="form-control" />
+                <span asp-validation-for="Valor" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
