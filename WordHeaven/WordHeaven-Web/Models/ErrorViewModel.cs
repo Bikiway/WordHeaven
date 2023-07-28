@@ -1,5 +1,3 @@
-using System;
-
 namespace WordHeaven_Web.Models
 {
     public class ErrorViewModel

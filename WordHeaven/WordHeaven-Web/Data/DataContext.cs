@@ -6,12 +6,10 @@ namespace WordHeaven_Web.Data
 {
     public class DataContext : IdentityDbContext<User>
     {
-        //Criar a tabela de livros
-        public DbSet<Livro> livros { get; set; }
+        public DbSet<Livro> Livros { get; set; }
 
         public DataContext(DbContextOptions<DataContext> options) : base(options)
         {
-            
         }
     }
 }

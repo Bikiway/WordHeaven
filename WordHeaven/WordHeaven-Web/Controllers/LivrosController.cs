@@ -22,7 +22,7 @@ namespace WordHeaven_Web.Controllers
         // GET: Livros
         public async Task<IActionResult> Index()
         {
-            return View(await _context.livros.ToListAsync());
+            return View(await _context.Livros.ToListAsync());
         }
 
         // GET: Livros/Details/5
@@ -33,7 +33,7 @@ namespace WordHeaven_Web.Controllers
                 return NotFound();
             }
 
-            var livro = await _context.livros
+            var livro = await _context.Livros
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (livro == null)
             {
@@ -73,7 +73,7 @@ namespace WordHeaven_Web.Controllers
                 return NotFound();
             }
 
-            var livro = await _context.livros.FindAsync(id);
+            var livro = await _context.Livros.FindAsync(id);
             if (livro == null)
             {
                 return NotFound();
@@ -124,7 +124,7 @@ namespace WordHeaven_Web.Controllers
                 return NotFound();
             }
 
-            var livro = await _context.livros
+            var livro = await _context.Livros
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (livro == null)
             {
@@ -139,15 +139,15 @@ namespace WordHeaven_Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var livro = await _context.livros.FindAsync(id);
-            _context.livros.Remove(livro);
+            var livro = await _context.Livros.FindAsync(id);
+            _context.Livros.Remove(livro);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
         private bool LivroExists(int id)
         {
-            return _context.livros.Any(e => e.Id == id);
+            return _context.Livros.Any(e => e.Id == id);
         }
     }
 }
