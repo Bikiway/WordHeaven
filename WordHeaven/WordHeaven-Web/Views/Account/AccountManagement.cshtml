@@ -1,56 +1,61 @@
-﻿@{
+﻿@using WordHeaven_Web.Data.Entity;
+@using Microsoft.AspNetCore.Identity;
+@using WordHeaven_Web.Controllers
+@using WordHeaven_Web.Helpers
+@inject UserManager<User> UserManager
+@inject SignInManager<User> SignInManager
+@inject RoleManager<IdentityRole> RoleManager
+
+@{
     ViewData["Title"] = "WordHeaven";
     Layout = "~/Views/Shared/_Layout.cshtml";
+
+    ViewData["Title"] = "WordHeaven";
+    var user = await UserManager.GetUserAsync(User);
+    @if (user != null)
+    {
+        var role = await UserManager.GetRolesAsync(user);
+        ViewData["FullName"] = user.FullName;
+        ViewData["Role"] = role[0];
+
+        var base64 = Convert.ToBase64String(user.PictureSource);
+        var imgSrc = String.Format("data:image/gif;base64,{0}", base64);
+        ViewData["Image"] = imgSrc;
+    }
 }
 
-<div class="container-fluid">
-    <div class="row column_title">
-        <div class="col-md-12">
-            <div class="page_title">
-                <a asp-area="" asp-controller="Account" asp-action="AccountManagement">
-                    <h2>Account Management</h2>
-                </a>
-            </div>
-        </div>
-    </div>
-    <div class="row column1">
-        <div class="col-md-6 col-lg-3">
-            <div class="full counter_section margin_bottom_30">
-                <div class="couter_icon">
-                    <div>
-                        <a asp-area="" asp-controller="Account" asp-action="ChangePersonalInformation">
-                            <i class="fa fa-user yellow_color"></i>
-                        </a>
+<center><h2 style="color:white;">Account Management</h2></center>
+<br />
+<div class="row">
+    <div class="col-lg-12">
+        <div class="main-profile ">
+            <div class="row">
+                <div class="col-lg-4">
+                    <img src="@ViewData["Image"]" alt="" style="border-radius: 23px;">
+                </div>
+                <div class="col-lg-4 align-self-center">
+                    <div class="main-info header-text">
+                        <h4>Hi @ViewData["FullName"]</h4>
+                        <p>Here you can change some personal information, change your password and which books you have read or are reading.</p>
+                        <div class="main-border-button">
+                            <a asp-area="" asp-controller="Account" asp-action="ChangePersonalInformation">
+                                Change Personal Information
+                                <i class="fa fa-user"></i>
+                            </a>
+                            <a asp-area="" asp-controller="Account" asp-action="ChangePassword">
+                                Change your Password
+                                <i class="fa fa-lock"></i>
+                            </a>
+                        </div>
                     </div>
                 </div>
-                <div class="counter_no">
-                    <div>
-                        <a asp-area="" asp-controller="Account" asp-action="ChangePersonalInformation">
-                            <p class="total_no">Personal Information</p>
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-6 col-lg-3">
-            <div class="full counter_section margin_bottom_30">
-                <div class="couter_icon">
-                    <div>
-                        <a asp-area="" asp-controller="Account" asp-action="ChangePassword">
-                        <i class="fa fa-lock blue1_color"></i>
-                        </a>
-                    </div>
-                </div>
-                <div class="counter_no">
-                    <div>
-                        <a asp-area="" asp-controller="Account" asp-action="ChangePassword">
-                        <p class="total_no">Change Password</p>
-                        </a>
-                    </div>
+                <div class="col-lg-4 align-self-center">
+                    <ul>
+                        <li>Total books read <span>None</span></li>
+                        <li>Total books in reading <span>None</span></li>
+                    </ul>
                 </div>
             </div>
         </div>
     </div>
 </div>
-

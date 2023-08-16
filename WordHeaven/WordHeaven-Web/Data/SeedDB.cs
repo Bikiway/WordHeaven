@@ -32,7 +32,7 @@ namespace WordHeaven_Web.Data
             await _userHelper.CheckRoleAsync("employee");
 
             var user = await _userHelper.GetUserByEmailAsync("test@gmail.com");
-            string completePath = Path.Combine(_environment.WebRootPath, "Default", "default.jpg");
+            string completePath = Path.Combine(_environment.WebRootPath, "assets", "images", "profile-default-image.jpg");
             byte[] imagemBytes = System.IO.File.ReadAllBytes(completePath);
 
             if (user == null)

@@ -4,52 +4,45 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<form method="post" enctype="multipart/form-data">
-    <div asp-validation-summary="ModelOnly"></div>
-    <center>
-        <div class="container-fluid">
-            <div class="row column_title">
-                <div class="col-md-12">
-                    <div class="page_title">
-                        <h2>Change Password</h2>
-                    </div>
-                </div>
-            </div>
+<Center>
+    <div class="row">
+        <h2 style="color:white;">Change Personal Information</h2>
+        <form method="post" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly"></div>
+            <br />
             <div class="form-group">
-                <label asp-for="FirstName">First Name</label>
+                <label asp-for="FirstName" style="color:white;">Introduce your First Name</label>
                 <input asp-for="FirstName" class="form-control" style="width:391px;text-align:left" />
                 <span asp-validation-for="FirstName" class="text-warning"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="LastName">Last Name</label>
+                <br />
+                <label asp-for="LastName" style="color:white;">Introduce your Last Name</label>
                 <input asp-for="LastName" class="form-control" style="width:391px;text-align:left" />
                 <span asp-validation-for="LastName" class="text-warning"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Email">Email</label>
+                <br />
+                <label asp-for="Email" style="color:white;">Introduce your Email</label>
                 <input asp-for="Email" class="form-control" style="width:391px;text-align:left" />
                 <span asp-validation-for="Email" class="text-warning"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="PictureUser">Image</label>
+                <br />
+                <label asp-for="PictureUser" style="color:white;">Introduce your new Profile Image</label>
                 <input asp-for="PictureUser" class="form-control" style="width:391px;text-align:left" type="file" />
                 <span asp-validation-for="PictureUser" class="text-warning"></span>
             </div>
-            <p style="color: red; font-family: Arial; font-size: medium; text-align:center">
-                @ViewBag.Message
-            </p>
-
+            <br />
+            <div class="text-success">
+                <p style="color:chartreuse">@ViewBag.Message </p>
+            </div>
+            <br />
             <div class="form-group">
-                <button type="submit" class="btn btn-primary" style="background-color:#dc6036;width:250px;height:35px;font:bold;border-color:#dc6036;">
+                <button type="submit" class="btn btn-primary" style="background-color:#e75e8d;width:250px;height:35px;font:bold;border-color:#e75e8d;">
                     <i class="fa fa-save" style="color:white;"></i>  Save
                 </button>
-                <a asp-controller="Account" asp-action="AccountManagement" class="btn btn-primary" style="background:#1d263b;width:250px;height:35px;border-color:#1d263b;">
+                <a asp-controller="Account" asp-action="AccountManagement" class="btn btn-primary" style="background:#bd5bcc;width:250px;height:35px;border-color:#bd5bcc;">
                     <i class="fa fa-arrow-left" style="color:white;"></i>  Cancel
                 </a>
             </div>
-        </div>
-    </center>
-</form>
+        </form>
+    </div>
+</Center>
 
 @section Scripts {
     @{

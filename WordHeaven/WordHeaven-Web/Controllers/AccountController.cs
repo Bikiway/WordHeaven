@@ -54,12 +54,12 @@ namespace WordHeaven_Web.Controllers
                     return RedirectToAction("Home", "Home");
                 else if (emailConfirmed == false)
                 {
-                    this.ModelState.AddModelError(string.Empty, "Unconfirmed e-mail. Please check you email.");
+                    this.ModelState.AddModelError(string.Empty, "Email not confirmed. Please check your email");
                     return View(model);
                 }
             }
 
-            this.ModelState.AddModelError(string.Empty, "Failed to login! Please enter correct login and password.");
+            this.ModelState.AddModelError(string.Empty, "Login failed! Please enter the correct username and password");
             return View(model);
         }
 
@@ -88,7 +88,7 @@ namespace WordHeaven_Web.Controllers
                 {
                     var user = await _userHelper.GetUserByEmailAsync(model.Username);
 
-                    string completePath = Path.Combine(_environment.WebRootPath, "images", "layout_img", "default.jpg");
+                    string completePath = Path.Combine(_environment.WebRootPath, "assets", "images", "profile-default-image.jpg");
                     byte[] imagemBytes = System.IO.File.ReadAllBytes(completePath);
 
                     if (user == null)
@@ -266,7 +266,7 @@ namespace WordHeaven_Web.Controllers
         [HttpPost]
         public async Task<IActionResult> ResetPassword(ResetPasswordViewModel model)
         {
-            var user = await _userHelper.GetUserByEmailAsync(model.UserName);
+            var user = await _userHelper.GetUserByEmailAsync(model.Email);
             if (user != null)
             {
                 var result = await _userHelper.ResetPasswordAsync(user, model.Token, model.NewPassword);

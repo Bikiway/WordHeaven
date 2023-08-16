@@ -62,11 +62,11 @@
     <header class="header-area header-sticky">
         <div class="container">
             <div class="row">
-                <div class="col-12">
+                <div class="col-12">               
                     <nav class="main-nav">
                         <!-- ***** Logo Start ***** -->
                         <a asp-area="" asp-controller="Home" asp-action="Home" class="logo">
-                            <img src="~/assets/images/logo.png" alt="">
+                            <img src="~/assets/images/logo.png" alt=""/>
                         </a>
                         <!-- ***** Logo End ***** -->
                         <!-- ***** Search End ***** -->
@@ -79,12 +79,12 @@
                         <!-- ***** Search End ***** -->
                         <!-- ***** Menu Start ***** -->
                         <ul class="nav">
-                            <li><a asp-area="" asp-controller="Home" asp-action="Home" class="active">Home</a></li>
-                            <li><a href="browse.html">Books</a></li>
+                            <li><a asp-area="" asp-controller="Home" asp-action="Home" class="active" style="color:white;">Home</a></li>
+                            <li><a asp-area="" asp-controller="Livros" asp-action="Index" style="color:white;">Books</a></li>
                             @if (this.User.Identity.IsAuthenticated)
                             {
-                                <li><a asp-area="" asp-controller="Account" asp-action="Logout"><i class="fa fa-sign-in fa-solid"></i> Logout</a></li>
-                                <li><a asp-area="" asp-controller="Account" asp-action="AccountManagement">@ViewData["FullName"]<img src="@ViewData["Image"]" alt=""></a></li>
+                                <li><a asp-area="" asp-controller="Account" asp-action="Logout" style="color:white;"><i class="fa fa-sign-in fa-solid"></i> Logout</a></li>
+                                <li><a asp-area="" asp-controller="Account" asp-action="AccountManagement" style="color:white;">@ViewData["FullName"]<img src="@ViewData["Image"]" alt=""></a></li>
                                
                             }
                             else
@@ -118,21 +118,6 @@
             </div>
         </div>
     </div>
-
-    <footer>
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-12">
-                    <p>
-                        Copyright © 2036 <a href="#">Cyborg Gaming</a> Company. All rights reserved.
-
-                        <br>Design: <a href="https://templatemo.com" target="_blank" title="free CSS templates">TemplateMo</a>  Distributed By <a href="https://themewagon.com" target="_blank">ThemeWagon</a>
-                    </p>
-                </div>
-            </div>
-        </div>
-    </footer>
-
 
     <!-- Scripts -->
     <!-- Bootstrap core JavaScript -->
