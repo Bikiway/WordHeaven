@@ -1,6 +1,6 @@
 ﻿namespace WordHeaven_Web.Data.Entity
 {
-    public class Livro
+    public class Livro : IEntity
     {
         public int Id { get; set; }
 

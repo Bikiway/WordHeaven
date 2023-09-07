@@ -7,6 +7,9 @@ namespace WordHeaven_Web.Data
     public class DataContext : IdentityDbContext<User>
     {
         public DbSet<Livro> Livros { get; set; }
+        public DbSet<Employees> Employee { get; set; }
+
+        public DbSet<Stores> Store { get; set; }
 
         public DataContext(DbContextOptions<DataContext> options) : base(options)
         {

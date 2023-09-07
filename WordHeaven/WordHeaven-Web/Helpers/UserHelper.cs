@@ -102,5 +102,10 @@ namespace WordHeaven_Web.Helpers
         {
             return await _userManager.GenerateEmailConfirmationTokenAsync(user);
         }
+
+        public async Task<User> GetUserByIdAsync(string userId)
+        {
+            return await _userManager.FindByIdAsync(userId);
+        }
     }
 }
