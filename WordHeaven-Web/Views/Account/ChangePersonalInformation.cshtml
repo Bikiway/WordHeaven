@@ -1,0 +1,51 @@
+﻿@model WordHeaven_Web.Models.Users.ChangePersonalInformationViewModel
+@{
+    ViewData["Title"] = "WordHeaven";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<Center>
+    <div class="row">
+        <h2 style="color:white;">Change Personal Information</h2>
+        <form method="post" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly"></div>
+            <br />
+            <div class="form-group">
+                <label asp-for="FirstName" style="color:white;">Introduce your First Name</label>
+                <input asp-for="FirstName" class="form-control" style="width:391px;text-align:left" />
+                <span asp-validation-for="FirstName" class="text-warning"></span>
+                <br />
+                <label asp-for="LastName" style="color:white;">Introduce your Last Name</label>
+                <input asp-for="LastName" class="form-control" style="width:391px;text-align:left" />
+                <span asp-validation-for="LastName" class="text-warning"></span>
+                <br />
+                <label asp-for="Email" style="color:white;">Introduce your Email</label>
+                <input asp-for="Email" class="form-control" style="width:391px;text-align:left" />
+                <span asp-validation-for="Email" class="text-warning"></span>
+                <br />
+                <label asp-for="PictureUser" style="color:white;">Introduce your new Profile Image</label>
+                <input asp-for="PictureUser" class="form-control" style="width:391px;text-align:left" type="file" />
+                <span asp-validation-for="PictureUser" class="text-warning"></span>
+            </div>
+            <br />
+            <div class="text-success">
+                <p style="color:chartreuse">@ViewBag.Message </p>
+            </div>
+            <br />
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary" style="background-color:#e75e8d;width:250px;height:35px;font:bold;border-color:#e75e8d;">
+                    <i class="fa fa-save" style="color:white;"></i>  Save
+                </button>
+                <a asp-controller="Account" asp-action="AccountManagement" class="btn btn-primary" style="background:#bd5bcc;width:250px;height:35px;border-color:#bd5bcc;">
+                    <i class="fa fa-arrow-left" style="color:white;"></i>  Cancel
+                </a>
+            </div>
+        </form>
+    </div>
+</Center>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

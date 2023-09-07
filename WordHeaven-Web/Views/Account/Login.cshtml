@@ -1,0 +1,57 @@
+﻿@model WordHeaven_Web.Models.Users.LoginViewModel
+@using Microsoft.AspNetCore.Identity
+@using WordHeaven_Web.Data.Entity
+@inject SignInManager<User> signInManager
+
+@{
+    ViewData["Title"] = "WordHeaven";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<Center><h2 style="color:white;">Login</h2></Center>
+<div class="row">
+    <div class="col-md-4 offset-md-4">
+        <form method="post">
+            <div class="form-group">
+                <label asp-for="UserName" style="color:white;">UserName</label>
+                <input asp-for="UserName" class="form-control" />
+                <span asp-validation-for="UserName" class="text-warning"></span>
+            </div>
+            <br />
+            <div class="form-group">
+                <label asp-for="Password" style="color:white;">Password</label>
+                <input asp-for="Password" type="password" class="form-control" />
+                <span asp-validation-for="Password" class="text-warning"></span>
+            </div>
+            <br />
+
+            <div class="form-group">
+                <div class="form-check">
+                    <input asp-for="RememberMe" type="checkbox" class="form-check-input" style="color:white;" />
+                    <label asp-for="RememberMe" class="form-check-label" style="color:white;">Remember Me?</label>
+                </div>
+                <span asp-validation-for="RememberMe" class="text-warning"></span>
+            </div>
+            <br />
+            <div asp-validation-summary="ModelOnly" style="color:chartreuse"></div>
+            <br />
+            <div class="form-group">
+                <center>
+                    <button type="submit" class="btn btn-primary" style="background-color:#e75e8d;width:350px;height:40px;border-color:#e75e8d;font-size:large;">
+                        <i class="fa fa-sign-in"></i> Login
+                    </button>
+                </center>
+                <br />
+                <br />
+                <span style="color:white;">Don't have an account yet? </span><a asp-area="" asp-controller="Account" asp-action="RegisterUser" style="color:#e75e8d;"> Register now</a>
+                <br />
+                <span style="color:white;">Forgot </span><a asp-area="" asp-controller="Account" asp-action="RecoverPassword" style="color:#e75e8d;"> your password?</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
