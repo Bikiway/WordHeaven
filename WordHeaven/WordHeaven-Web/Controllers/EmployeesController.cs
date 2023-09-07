@@ -306,7 +306,7 @@ namespace WordHeaven_Web.Controllers
             if (!result.Succeeded)
             {
                 return NotFound();
-            }
+            } 
 
             return View();
         }
