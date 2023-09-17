@@ -246,14 +246,17 @@ namespace WordHeaven_Web.Controllers
 
                 var link = this.Url.Action("ResetPassword", "Account", new { token = myToken }, protocol: HttpContext.Request.Scheme);
 
-                await _emailHelper.SendEmail(user.Email, "WordHeaven Reset Password<br/>",
+                Responses response = _emailHelper.SendEmail(user.Email, "WordHeaven Reset Password<br/>",
                       $"Mr. /Mrs. {user.FirstName} {user.LastName},<br/> " +
                       $"To reset your password click on the link below:<br/><br/>" +
                       $"<a href = \"{link}\">Reset Password</a>" +
                        "<br/><br/>Best regards, " +
                        "<br/>WordHeaven");
 
-                this.ViewBag.Message = "The instructions to reset your password has been sent to your email.";
+                if (response.IsSuccess)
+                {
+                    ViewBag.Message = "The instructions to recover your password has been sent to the email associated.";
+                }
 
                 return this.View();
             }

@@ -25,5 +25,12 @@ namespace WordHeaven_Web.Data.Entity
 
         [Display(Name = "Full Name")]
         public string? FullName => $"{FirstName} {LastName}";
+
+
+
+        //Employees only
+
+        public string Age { get; set; }
+        public string JobTitle { get; set; }
     }
 }

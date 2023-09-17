@@ -9,6 +9,8 @@ namespace WordHeaven_Web.Helpers
     {
         Task<User> GetUserByEmailAsync(string email);
 
+        Task<User> GetUserByIdAsync(string userId);
+
         Task<IdentityResult> AddUserAsync(User user, string password);
 
         Task<SignInResult> LoginAsync(LoginViewModel model);

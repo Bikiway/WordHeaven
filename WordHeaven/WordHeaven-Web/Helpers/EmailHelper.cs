@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
 using MimeKit;
+using System;
 using System.IO;
 using System.Threading.Tasks;
 
@@ -14,7 +15,7 @@ namespace WordHeaven_Web.Helpers
             _configuration = configuration;
         }
 
-        public async Task SendEmail(string email, string subject, string message)
+        public Responses SendEmail(string email, string subject, string message)
         {
             var nameFrom = _configuration["Email:NameFrom"];
             var from = _configuration["Email:From"];
@@ -39,9 +40,19 @@ namespace WordHeaven_Web.Helpers
                     client.Disconnect(true);
                 }
             }
-            catch (System.Exception)
+            catch (Exception ex)
             {
+                return new Responses
+                {
+                    IsSuccess = false,
+                    Message = ex.ToString()
+                };
             }
+
+            return new Responses
+            {
+                IsSuccess = true,
+            };
         }
 
         public async Task SendEmailWithAttachment(string email, string subject, string message, MemoryStream attachment)
