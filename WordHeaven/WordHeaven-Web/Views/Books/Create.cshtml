@@ -1,0 +1,75 @@
+﻿@model WordHeaven_Web.Models.Books.CreateBookViewModel
+
+@{
+    ViewData["Title"] = "WordHeaven";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<center><h2>Add new Book</h2></center>
+<br />
+<br />
+<form method="post" enctype="multipart/form-data" style="height:423px;">
+    <div class="row" style="color:white;">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <div class="col-md-4">
+            <div class="form-group">
+                <label asp-for="Title" class="control-label"></label>
+                <input asp-for="Title" class="form-control" />
+                <span asp-validation-for="Title" class="text-danger"></span>
+                <br />
+                <label asp-for="BookCoverPicture" style="color:white;">Introduce Book Cover</label>
+                <input asp-for="BookCoverPicture" class="form-control" style="text-align:left;" type="file" lang="en" />
+                <span asp-validation-for="BookCoverPicture" class="text-warning"></span>
+                <br />
+                <label asp-for="Category" class="control-label"></label>
+                <input asp-for="Category" class="form-control" />
+                <span asp-validation-for="Category" class="text-danger"></span>
+                <br />
+                <label asp-for="YearOfPublication" class="control-label"></label>
+                <input asp-for="YearOfPublication" class="form-control" min="1950" max="2099" step="1" value="2023">
+                <span asp-validation-for="YearOfPublication" class="text-danger"></span>
+                <br />
+                <label asp-for="Abstract" class="control-label"></label>
+                <input asp-for="Abstract" class="form-control" />
+                <span asp-validation-for="Abstract" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="col-md-5">
+            <div class="form-group">
+                <label asp-for="Author" class="control-label"></label>
+                <input asp-for="Author" class="form-control" />
+                <span asp-validation-for="Author" class="text-danger"></span>
+                <br />
+                <label asp-for="Publisher" class="control-label"></label>
+                <input asp-for="Publisher" class="form-control" />
+                <span asp-validation-for="Publisher" class="text-danger"></span>
+                <br />
+                <label asp-for="Language" class="control-label"></label>
+                <input asp-for="Language" class="form-control" />
+                <span asp-validation-for="Language" class="text-danger"></span>
+                <br />
+                <label asp-for="Value" class="control-label"></label>
+                <input asp-for="Value" class="form-control" />
+                <span asp-validation-for="Value" class="text-danger"></span>
+            </div>
+        </div>
+    </div>
+    <br />
+    <br />
+    <center>
+        <div class="form-group">
+            <button type="submit" value="Create" class="btn btn-primary" style="background-color:#e75e8d;width:250px;height:35px;font:bold;border-color:#e75e8d;">
+                <i class="fas fa-save" style="color:white;"></i> Save
+            </button>
+            <a asp-action="Index" class="btn btn-success" style="background:#bd5bcc;width:250px;height:35px;border-color:#bd5bcc;">
+                <i class="fa fa-chevron-left" style="color:white;"></i> Back to List
+            </a>
+        </div>
+    </center>
+</form>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

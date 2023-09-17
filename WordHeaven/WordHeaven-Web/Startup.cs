@@ -6,6 +6,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using WordHeaven_Web.Data;
+using WordHeaven_Web.Data.Books;
 using WordHeaven_Web.Data.Entity;
 using WordHeaven_Web.Helpers;
 
@@ -40,7 +41,8 @@ namespace WordHeaven_Web
             services.AddTransient<SeedDb>();
 
             services.AddScoped<IUserHelper, UserHelper>();
-            services.AddScoped<IEmailHelper, EmailHelper>(); ;
+            services.AddScoped<IEmailHelper, EmailHelper>();
+            services.AddScoped<IBookRepository, BookRepository>();
 
             services.ConfigureApplicationCookie(options =>
             {

@@ -12,15 +12,23 @@
 
     ViewData["Title"] = "WordHeaven";
     var user = await UserManager.GetUserAsync(User);
-    @if (user != null)
+    
+    try
     {
-        var role = await UserManager.GetRolesAsync(user);
-        ViewData["FullName"] = user.FullName;
-        ViewData["Role"] = role[0];
+        @if (user != null)
+        {
+            var role = await UserManager.GetRolesAsync(user);
+            ViewData["FullName"] = user.FullName;
+            ViewData["Role"] = role[0];
 
-        var base64 = Convert.ToBase64String(user.PictureSource);
-        var imgSrc = String.Format("data:image/gif;base64,{0}", base64);
-        ViewData["Image"] = imgSrc;
+            var base64 = Convert.ToBase64String(user.PictureSource);
+            var imgSrc = String.Format("data:image/gif;base64,{0}", base64);
+            ViewData["Image"] = imgSrc;
+        }
+
+    }
+    catch (Exception ex)
+    {
     }
 }
 

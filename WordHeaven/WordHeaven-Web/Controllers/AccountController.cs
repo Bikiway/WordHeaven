@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Hosting;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -132,7 +133,8 @@ namespace WordHeaven_Web.Controllers
         #endregion Register
 
         #region Change Personal Data
-
+        
+        [Authorize]
         public async Task<IActionResult> ChangePersonalInformation()
         {
             var user = await _userHelper.GetUserByEmailAsync(this.User.Identity.Name);
@@ -193,7 +195,8 @@ namespace WordHeaven_Web.Controllers
         #endregion Change Personal Data
 
         #region Change/Recover Password
-
+        
+        [Authorize]
         public IActionResult ChangePassword()
         {
             return View();

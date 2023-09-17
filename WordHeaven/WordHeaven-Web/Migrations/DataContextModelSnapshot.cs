@@ -150,42 +150,39 @@ namespace WordHeaven_Web.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
-            modelBuilder.Entity("WordHeaven_Web.Data.Entity.Livro", b =>
+            modelBuilder.Entity("WordHeaven_Web.Data.Entity.Book", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("AnoDePublicacao")
+                    b.Property<string>("Abstract")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Autor")
+                    b.Property<string>("Author")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<bool>("Desconto")
-                        .HasColumnType("bit");
+                    b.Property<byte[]>("BookCover")
+                        .HasColumnType("varbinary(max)");
 
-                    b.Property<string>("Editora")
+                    b.Property<string>("Category")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Idioma")
+                    b.Property<string>("Language")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("NumeroPaginas")
+                    b.Property<string>("Publisher")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Title")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal>("Value")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int>("YearOfPublication")
                         .HasColumnType("int");
-
-                    b.Property<string>("Resumo")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Tematica")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Titulo")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<double>("Valor")
-                        .HasColumnType("float");
 
                     b.Property<string>("userId")
                         .HasColumnType("nvarchar(450)");
@@ -194,7 +191,7 @@ namespace WordHeaven_Web.Migrations
 
                     b.HasIndex("userId");
 
-                    b.ToTable("Livros");
+                    b.ToTable("Books");
                 });
 
             modelBuilder.Entity("WordHeaven_Web.Data.Entity.User", b =>
@@ -328,7 +325,7 @@ namespace WordHeaven_Web.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("WordHeaven_Web.Data.Entity.Livro", b =>
+            modelBuilder.Entity("WordHeaven_Web.Data.Entity.Book", b =>
                 {
                     b.HasOne("WordHeaven_Web.Data.Entity.User", "user")
                         .WithMany()

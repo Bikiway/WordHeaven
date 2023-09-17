@@ -1,0 +1,100 @@
+﻿@model List<WordHeaven_Web.Data.Entity.Book>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<center><h1>Books Catalog</h1></center>
+<p>
+    <a asp-action="Create" type="submit" class="btn btn-primary" style="background-color:#e75e8d;font:bold;border-color:#e75e8d;">
+        <i class="fa fa-add" style="color:white;"></i>  Add New Book
+    </a>
+</p>
+<br />
+<table class="table align-middle table-secondary border-danger-subtle">
+    <thead>
+        <tr>
+            <th>Cover</th>
+            <th>Title</th>
+            <th>Author</th>
+            <th>Publisher</th>
+            <th>Year</th>
+            <th>Abstract</th>
+            <th>Language</th>
+            <th>Category</th>
+            <th>Value</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @if (item.BookCover.Length > 0)
+                    {
+                        var base64 = Convert.ToBase64String(item.BookCover);
+                        var imgSrc = String.Format("data:image/gif;base64,{0}", base64);
+                        ViewData["Image"] = imgSrc;
+                        <img src="@ViewData["Image"]" alt="Image" style="width:65px;height:65px;max-width:100%;height:auto">
+                    }
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Title)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Author)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Publisher)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.YearOfPublication)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Abstract)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Language)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Category)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Value)
+                </td>
+                <td>
+                    @if (this.User.Identity.IsAuthenticated && this.User.IsInRole("Admin") || this.User.IsInRole("employee"))
+                    {
+                        <a asp-action="Edit" class="btn btn-success" asp-route-id="@item.Id">Edit</a>
+                        <a asp-action="Details" class="btn btn-warning" asp-route-id="@item.Id">Details</a>
+                        <a asp-action="Delete" class="btn btn-danger" asp-route-id="@item.Id">Delete</a>
+                    }
+                    else
+                    {
+                        <a asp-action="Details" class="btn btn-warning" asp-route-id="@item.Id">Details</a>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+<br />
+<!-- Pagination -->
+<nav>
+    <ul class="pagination">
+        <li class="page-item @(ViewBag.CurrentPage == 1 ? "disabled" : "")">
+            <a class="page-link" href="@Url.Action("Index", new { page = ViewBag.CurrentPage - 1 })">Previous</a>
+        </li>
+        @for (int i = 1; i <= ViewBag.TotalPages; i++)
+        {
+            <li class="page-item @(i == ViewBag.CurrentPage ? "active" : "")">
+                <a class="page-link" href="@Url.Action("Index", new { page = i })">@i</a>
+            </li>
+        }
+        <li class="page-item @(ViewBag.CurrentPage == ViewBag.TotalPages ? "disabled" : "")">
+            <a class="page-link" href="@Url.Action("Index", new { page = ViewBag.CurrentPage + 1 })">Next</a>
+        </li>
+    </ul>
+</nav>

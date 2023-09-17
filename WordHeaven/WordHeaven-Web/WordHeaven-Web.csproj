@@ -19,13 +19,6 @@
 		<None Include="Views\Account\RegisterUser.cshtml" />
 		<None Include="Views\Account\ResetPassword.cshtml" />
 		<None Include="Views\Home\Home.cshtml" />
-		<None Include="Views\Home\Index.cshtml" />
-		<None Include="Views\Home\Privacy.cshtml" />
-		<None Include="Views\Livros\Create.cshtml" />
-		<None Include="Views\Livros\Delete.cshtml" />
-		<None Include="Views\Livros\Details.cshtml" />
-		<None Include="Views\Livros\Edit.cshtml" />
-		<None Include="Views\Livros\Index.cshtml" />
 		<None Include="Views\Shared\Error.cshtml" />
 		<None Include="Views\Shared\_Layout.cshtml" />
 		<None Include="Views\Shared\_ValidationScriptsPartial.cshtml" />
@@ -70,6 +63,7 @@
 		<PackageReference Include="Azure.Storage.Blobs" Version="12.17.0" />
 		<PackageReference Include="Azure.Storage.Files.Shares" Version="12.15.0" />
 		<PackageReference Include="Azure.Storage.Queues" Version="12.15.0" />
+		<PackageReference Include="jQuery" Version="3.7.0" />
 		<PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="5.0.17" />
 		<PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="5.0.17" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="5.0.17">
@@ -81,6 +75,7 @@
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
+		<PackageReference Include="Microsoft.jQuery.Unobtrusive.Validation" Version="4.0.0" />
 		<PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="5.0.2" />
 		<PackageReference Include="WindowsAzure.Storage" Version="5.0.2" />
 		<PackageReference Include="MimeKit" Version="4.1.0" />
