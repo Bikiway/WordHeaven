@@ -150,115 +150,146 @@ namespace WordHeaven_Web.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
-            modelBuilder.Entity("WordHeaven_Web.Data.Entity.Employees", b =>
+            modelBuilder.Entity("WordHeaven_Web.Data.Entity.Book", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("Age")
-                        .HasMaxLength(3)
-                        .HasColumnType("nvarchar(3)");
-
-                    b.Property<string>("FirstName")
+                    b.Property<string>("Abstract")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("JobTitle")
+                    b.Property<string>("Author")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("LastName")
+                    b.Property<byte[]>("BookCover")
+                        .HasColumnType("varbinary(max)");
+
+                    b.Property<string>("Category")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("PhoneNumber")
-                        .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
+                    b.Property<string>("Language")
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("UserName")
+                    b.Property<string>("Publisher")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Title")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal>("Value")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int>("YearOfPublication")
+                        .HasColumnType("int");
+
+                    b.Property<string>("userId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("userId");
+
+                    b.ToTable("Books");
+                });
+
+            modelBuilder.Entity("WordHeaven_Web.Data.Entity.Employee", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Address")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("Email")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("storeId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("storesId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("userId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("storesId");
-
-                    b.HasIndex("userId");
-
-                    b.ToTable("Employee");
-                });
-
-            modelBuilder.Entity("WordHeaven_Web.Data.Entity.Livro", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("AnoDePublicacao")
+                    b.Property<string>("EmployeeUserId")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Autor")
+                    b.Property<string>("FirstName")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<bool>("Desconto")
-                        .HasColumnType("bit");
+                    b.Property<byte[]>("Image")
+                        .HasColumnType("varbinary(max)");
 
-                    b.Property<string>("Editora")
+                    b.Property<string>("JobTitle")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Idioma")
+                    b.Property<string>("LastName")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("NumeroPaginas")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Resumo")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Tematica")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Titulo")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<double>("Valor")
-                        .HasColumnType("float");
-
-                    b.Property<string>("userId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("userId");
-
-                    b.ToTable("Livros");
-                });
-
-            modelBuilder.Entity("WordHeaven_Web.Data.Entity.Stores", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("Location")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Phone")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PostalCode")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("StoreId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("userId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("StoreId");
+
+                    b.HasIndex("userId");
+
+                    b.ToTable("Employees");
+                });
+
+            modelBuilder.Entity("WordHeaven_Web.Data.Entity.Store", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Address")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Location")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Phone")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PostalCode")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Store");
+                    b.ToTable("Stores");
                 });
 
             modelBuilder.Entity("WordHeaven_Web.Data.Entity.User", b =>
@@ -270,11 +301,9 @@ namespace WordHeaven_Web.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Address")
+                        .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
-
-                    b.Property<string>("Age")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
@@ -291,10 +320,11 @@ namespace WordHeaven_Web.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("JobTitle")
+                    b.Property<string>("LastName")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("LastName")
+                    b.Property<string>("Location")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -323,6 +353,10 @@ namespace WordHeaven_Web.Migrations
 
                     b.Property<byte[]>("PictureSource")
                         .HasColumnType("varbinary(max)");
+
+                    b.Property<string>("PostalCode")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("nvarchar(max)");
@@ -398,28 +432,35 @@ namespace WordHeaven_Web.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("WordHeaven_Web.Data.Entity.Employees", b =>
+            modelBuilder.Entity("WordHeaven_Web.Data.Entity.Book", b =>
                 {
-                    b.HasOne("WordHeaven_Web.Data.Entity.Stores", "stores")
-                        .WithMany()
-                        .HasForeignKey("storesId");
-
                     b.HasOne("WordHeaven_Web.Data.Entity.User", "user")
                         .WithMany()
                         .HasForeignKey("userId");
-
-                    b.Navigation("stores");
 
                     b.Navigation("user");
                 });
 
-            modelBuilder.Entity("WordHeaven_Web.Data.Entity.Livro", b =>
+            modelBuilder.Entity("WordHeaven_Web.Data.Entity.Employee", b =>
                 {
+                    b.HasOne("WordHeaven_Web.Data.Entity.Store", "Store")
+                        .WithMany("Employees")
+                        .HasForeignKey("StoreId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("WordHeaven_Web.Data.Entity.User", "user")
                         .WithMany()
                         .HasForeignKey("userId");
 
+                    b.Navigation("Store");
+
                     b.Navigation("user");
+                });
+
+            modelBuilder.Entity("WordHeaven_Web.Data.Entity.Store", b =>
+                {
+                    b.Navigation("Employees");
                 });
 #pragma warning restore 612, 618
         }

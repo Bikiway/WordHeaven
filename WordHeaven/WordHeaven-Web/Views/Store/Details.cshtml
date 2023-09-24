@@ -1,0 +1,62 @@
+﻿@model WordHeaven_Web.Data.Entity.Store
+
+@{
+    ViewData["Title"] = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<center><h2 style="color:white;">Store @Html.DisplayFor(model => model.Name)</h2></center>
+<br />
+<div class="row">
+    <div class="col-lg-12">
+        <div class="main-profile ">
+            <div class="row">
+                <div class="col-lg-4">
+                    <img src="~/assets/images/StoreIcon.jpg" alt="" style="border-radius: 23px;">
+                </div>
+                <div class="col-lg-4 align-self-center">
+                    <div class="main-info header-text">
+                        <dl class="row" style="color:white">
+                            <dt class="col-sm-5 col-md-6">
+                                @Html.DisplayNameFor(model => model.Address):
+                            </dt>
+                            <dd class="col-sm-5 offset-sm-2 col-md-6 offset-md-0">
+                                @Html.DisplayFor(model => model.Address)
+                            </dd>
+                            <dt class="col-sm-5 col-md-6">
+                                @Html.DisplayNameFor(model => model.Location):
+                            </dt>
+                            <dd class="col-sm-5 offset-sm-2 col-md-6 offset-md-0">
+                                @Html.DisplayFor(model => model.Location)
+                            </dd>
+                            <dt class="col-sm-5 col-md-6">
+                                @Html.DisplayNameFor(model => model.PostalCode):
+                            </dt>
+                            <dd class="col-sm-5 offset-sm-2 col-md-6 offset-md-0">
+                                @Html.DisplayFor(model => model.PostalCode)
+                            </dd>
+                            <dt class="col-sm-5 col-md-6">
+                                @Html.DisplayNameFor(model => model.Phone):
+                            </dt>
+                            <dd class="col-sm-5 offset-sm-2 col-md-6 offset-md-0">
+                                @Html.DisplayFor(model => model.Phone)
+                            </dd>
+                            <dt class="col-sm-5 col-md-6">
+                                @Html.DisplayNameFor(model => model.Email):
+                            </dt>
+                            <dd class="col-sm-5 offset-sm-2 col-md-6 offset-md-0">
+                                @Html.DisplayFor(model => model.Email)
+                            </dd>
+                        </dl>
+                        <br />
+                        <br />
+                        <center>
+                            <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning" style="width:150px;"><i class="fa fa-edit"></i> Edit</a>
+                            <a asp-action="Index" class="btn btn-success" style="width:150px;"><i class="fa fa-chevron-left"></i> Back to List</a>
+                        </center>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

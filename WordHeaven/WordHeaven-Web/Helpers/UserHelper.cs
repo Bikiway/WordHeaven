@@ -107,5 +107,10 @@ namespace WordHeaven_Web.Helpers
         {
             return await _userManager.FindByIdAsync(userId);
         }
+
+        public async Task<IdentityResult> DeleteUserAsync(User user)
+        {
+            return await _userManager.DeleteAsync(user);
+        }
     }
 }

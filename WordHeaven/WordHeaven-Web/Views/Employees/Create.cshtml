@@ -1,0 +1,80 @@
+﻿@model WordHeaven_Web.Models.Employees.CreateNewEmployeeViewModel
+
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<center><h2>Add new Employee</h2></center>
+<br />
+<br />
+<form method="post" enctype="multipart/form-data" style="height:423px;">
+    <div class="row" style="color:white;">
+        <center><div asp-validation-summary="ModelOnly" class="text-danger"></div></center>
+        <br />
+        <div class="col-md-4">
+            <div class="form-group">
+                <label asp-for="FirstName" class="control-label"></label>
+                <input asp-for="FirstName" class="form-control" />
+                <span asp-validation-for="FirstName" class="text-danger"></span>
+                <br />
+                <label asp-for="JobTitle" class="control-label"></label>
+                <input asp-for="JobTitle" class="form-control" />
+                <span asp-validation-for="JobTitle" class="text-danger"></span>
+                <br />
+                <label asp-for="Email" class="control-label"></label>
+                <input asp-for="Email" class="form-control" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+                <br />
+                <label asp-for="Address" class="control-label"></label>
+                <input asp-for="Address" class="form-control" />
+                <span asp-validation-for="Address" class="text-danger"></span>
+                <br />
+                <label asp-for="Location" class="control-label"></label>
+                <input asp-for="Location" class="form-control" />
+                <span asp-validation-for="Location" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="col-md-5">
+            <div class="form-group">
+                <label asp-for="LastName" class="control-label"></label>
+                <input asp-for="LastName" class="form-control" />
+                <span asp-validation-for="LastName" class="text-danger"></span>
+                <br />
+                <label asp-for="Store" class="control-label"></label>
+                <select asp-for="StoreId" asp-items="Model.Stores" class="form-control"></select>
+                <span asp-validation-for="StoreId" class="text-danger"></span>
+                <br />
+                <label asp-for="Phone" class="control-label"></label>
+                <input asp-for="Phone" class="form-control" />
+                <span asp-validation-for="Phone" class="text-danger"></span>
+                <br />
+                <label asp-for="EmployeeImageFile" style="color:white;">Introduce Image</label>
+                <input asp-for="EmployeeImageFile" class="form-control" style="text-align:left;" type="file" lang="en" />
+                <span asp-validation-for="EmployeeImageFile" class="text-warning"></span>
+                <br />
+                <label asp-for="PostalCode" class="control-label"></label>
+                <input asp-for="PostalCode" class="form-control" />
+                <span asp-validation-for="PostalCode" class="text-danger"></span>
+            </div>
+        </div>
+       
+    </div>
+    <br />
+    <center>
+        <div class="form-group">
+            <button type="submit" value="Create" class="btn btn-primary" style="background-color:#e75e8d;width:250px;height:35px;font:bold;border-color:#e75e8d;">
+                <i class="fas fa-save" style="color:white;"></i> Save
+            </button>
+            <a asp-action="Index" class="btn btn-success" style="background:#bd5bcc;width:250px;height:35px;border-color:#bd5bcc;">
+                <i class="fa fa-chevron-left" style="color:white;"></i> Back to List
+            </a>
+        </div>
+    </center>
+</form>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

@@ -23,6 +23,8 @@ namespace WordHeaven_Web.Helpers
 
         Task<IdentityResult> UpdateUserAsync(User user);
 
+        Task<IdentityResult> DeleteUserAsync(User user);
+
         Task<IdentityResult> ChangePasswordAsync(User user, string oldPassword, string newPassword);
 
         Task CheckRoleAsync(string roleName);

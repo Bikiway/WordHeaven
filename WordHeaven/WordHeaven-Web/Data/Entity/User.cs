@@ -13,8 +13,17 @@ namespace WordHeaven_Web.Data.Entity
         [Display(Name = "Last Name")]
         public string? LastName { get; set; }
 
+        [Required]
         [MaxLength(100, ErrorMessage = "The field {0} cannot have more then {1} characters.")]
-        public string? Address { get; set; }
+        public string Address { get; set; }
+
+        [Required]
+        [Display(Name = "Postal Code")]
+        [DataType(DataType.PostalCode)]
+        public string PostalCode { get; set; }
+
+        [Required]
+        public string Location { get; set; }
 
         [Display(Name = "Phone Number")]
         [DataType(DataType.PhoneNumber)]
@@ -25,12 +34,5 @@ namespace WordHeaven_Web.Data.Entity
 
         [Display(Name = "Full Name")]
         public string? FullName => $"{FirstName} {LastName}";
-
-
-
-        //Employees only
-
-        public string Age { get; set; }
-        public string JobTitle { get; set; }
     }
 }

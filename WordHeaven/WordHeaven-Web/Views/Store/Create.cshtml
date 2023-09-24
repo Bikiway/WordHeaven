@@ -1,0 +1,65 @@
+﻿@model WordHeaven_Web.Data.Entity.Store
+
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<center><h2>Add new Store</h2></center>
+<br />
+<br />
+<form method="post">
+    <div class="row" style="color:white;">
+        <center><div asp-validation-summary="ModelOnly" class="text-danger"></div></center>
+        <br />
+        <div class="col-md-4">
+            <div class="form-group">
+                <label asp-for="Name" class="control-label"></label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+                <br />
+                <label asp-for="Location" class="control-label"></label>
+                <input asp-for="Location" class="form-control" />
+                <span asp-validation-for="Location" class="text-danger"></span>
+                <br />
+                <label asp-for="Phone" class="control-label"></label>
+                <input asp-for="Phone" class="form-control" />
+                <span asp-validation-for="Phone" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="col-md-5">
+            <div class="form-group">
+                <label asp-for="Address" class="control-label"></label>
+                <input asp-for="Address" class="form-control" />
+                <span asp-validation-for="Address" class="text-danger"></span>
+                <br />
+                <label asp-for="PostalCode" class="control-label"></label>
+                <input asp-for="PostalCode" class="form-control" />
+                <span asp-validation-for="PostalCode" class="text-danger"></span>
+                <br />
+                <label asp-for="Email" class="control-label"></label>
+                <input asp-for="Email" class="form-control" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+        </div>
+
+    </div>
+    <br />
+    <center>
+        <div class="form-group">
+            <button type="submit" value="Create" class="btn btn-primary" style="background-color:#e75e8d;width:250px;height:35px;font:bold;border-color:#e75e8d;">
+                <i class="fas fa-save" style="color:white;"></i> Save
+            </button>
+            <a asp-action="Index" class="btn btn-success" style="background:#bd5bcc;width:250px;height:35px;border-color:#bd5bcc;">
+                <i class="fa fa-chevron-left" style="color:white;"></i> Back to List
+            </a>
+        </div>
+    </center>
+</form>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
+

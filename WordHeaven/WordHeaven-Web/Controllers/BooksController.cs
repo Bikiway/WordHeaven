@@ -35,25 +35,34 @@ namespace WordHeaven_Web.Controllers
         // GET: Books/Index
         public ActionResult Index(int? page)
         {
-            int pageNumber = page ?? 1; // Página padrão é 1
-            int pageSize = 20; // Número de itens por página
+            try
+            {
+                int pageNumber = page ?? 1; // Página padrão é 1
+                int pageSize = 10; // Número de itens por página
+                var books = _bookRepository.GetAll().OrderBy(b => b.Id);
+                int totalBooks = books.Count();
 
-            // Recupera todos os livros do banco de dados
-            var books = _bookRepository.GetAll().OrderBy(b => b.Id);
+                if (totalBooks > 0)
+                {
+                    // Calcula o total de páginas e ajusta para não ultrapassar o limite
+                    int totalPages = (int)Math.Ceiling((double)totalBooks / pageSize);
+                    pageNumber = Math.Max(1, Math.Min(totalPages, pageNumber));
 
-            // Calcula o total de páginas e ajusta para não ultrapassar o limite
-            int totalBooks = books.Count();
-            int totalPages = (int)Math.Ceiling((double)totalBooks / pageSize);
-            pageNumber = Math.Max(1, Math.Min(totalPages, pageNumber));
+                    // Pula e pega os livros correspondentes à página atual
+                    var pagedBooks = books.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList();
 
-            // Pula e pega os livros correspondentes à página atual
-            var pagedBooks = books.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList();
+                    ViewBag.TotalPages = totalPages;
+                    ViewBag.CurrentPage = pageNumber;
 
-            ViewBag.TotalPages = totalPages;
-            ViewBag.CurrentPage = pageNumber;
+                    return View(pagedBooks);
+                }
 
-
-            return View(pagedBooks);
+                return View(null);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
 
         // GET: Books/Create
@@ -193,11 +202,11 @@ namespace WordHeaven_Web.Controllers
                         }
                     }
 
-                   
+
                     var response = _bookRepository.UpdateAsync(book);
-                    
+
                     response.Wait();
-                    
+
                     if (response.IsCompleted)
                         this.ViewBag.Message = "Your Book has been updated!";
                     else
@@ -207,7 +216,7 @@ namespace WordHeaven_Web.Controllers
                 }
                 catch (Exception)
                 {
-                   
+
                 }
             }
             return View(model);
@@ -261,7 +270,7 @@ namespace WordHeaven_Web.Controllers
                 }
 
                 var book = await _bookRepository.GetByIdAsync(id.Value);
-                
+
                 if (book == null)
                 {
                     return new NotFoundViewResult("BookNotFound");

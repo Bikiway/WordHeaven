@@ -1,22 +1,17 @@
 ﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using Microsoft.IdentityModel.Tokens;
-using System.Data;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
-using System.Threading.Tasks;
 using System;
+using System.Data;
+using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
+using WordHeaven_Web.Data.Employees;
 using WordHeaven_Web.Data.Entity;
 using WordHeaven_Web.Helpers;
-using WordHeaven_Web.Models.Users;
-using WordHeaven_Web.Models;
-using WordHeaven_Web.Data;
-using System.Linq;
+using WordHeaven_Web.Models.Employees;
 
 namespace WordHeaven_Web.Controllers
 {
@@ -24,318 +19,308 @@ namespace WordHeaven_Web.Controllers
     {
         private readonly IUserHelper _userHelper;
         private readonly IEmailHelper _emailHelper;
-        private readonly IConfiguration _configuration;
         private readonly IEmployeesRepository _employeeRepository;
-        private readonly IConverterHelper _converterHelper;
+        private readonly IWebHostEnvironment _environment;
 
 
-        public EmployeesController(IConverterHelper converterHelper, IEmailHelper emailHelper, IEmployeesRepository employeeRepository, IUserHelper userHelper, IConfiguration configuration)
+        public EmployeesController(IEmployeesRepository employeeRepository, IUserHelper userHelper, IWebHostEnvironment environment)
         {
-            _configuration = configuration;
-            _converterHelper = converterHelper;
-            _emailHelper = emailHelper;
-            _employeeRepository = employeeRepository;
+            _environment = environment;
             _userHelper = userHelper;
+            _employeeRepository = employeeRepository;
         }
 
-        // GET: EmployeesController
+        // GET: Employees/Index
         [Authorize(Roles = "Admin")]
-        public IActionResult Index()
+        public ActionResult Index(int? page)
         {
-            return View(_employeeRepository.GetAllWithUser().OrderBy(o => o.Id));
-        }
-
-        // GET: EmployeesController/Details/5
-        [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> Details(int? id)
-        {
-            if (id == null)
+            try
             {
-                return new NotFoundViewResult("EmployeeNotFound");
+                int pageNumber = page ?? 1; // Página padrão é 1
+                int pageSize = 10; // Número de itens por página
+                var employees = _employeeRepository.GetAll().OrderBy(b => b.Id).Include(p => p.Store);
+                int totalEmployees = employees.Count();
+
+                if (totalEmployees > 0)
+                {
+                    // Calcula o total de páginas e ajusta para não ultrapassar o limite
+                    int totalPages = (int)Math.Ceiling((double)totalEmployees / pageSize);
+                    pageNumber = Math.Max(1, Math.Min(totalPages, pageNumber));
+
+                    // Pula e pega os employees correspondentes à página atual
+                    var pagedEmployees = employees.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList();
+
+                    ViewBag.TotalPages = totalPages;
+                    ViewBag.CurrentPage = pageNumber;
+
+                    return View(pagedEmployees);
+                }
+
+                return View(null);
             }
-
-            var employees = await _employeeRepository.GetByIdAsync(id.Value);
-
-            if (employees == null)
+            catch (Exception)
             {
-                return new NotFoundViewResult("EmployeeNotFound");
+                throw;
             }
-
-            return View(employees);
         }
 
-        // GET: EmployeesController/Create
+        // GET: Employees/Create
         [Authorize(Roles = "Admin")]
-        public ActionResult Create()
+        public IActionResult Create()
         {
-            return View();
+            var model = new CreateNewEmployeeViewModel
+            {
+                Stores = _employeeRepository.GetComboStores()
+            };
+            return View(model);
         }
 
-        // POST: EmployeesController/Create
+        // POST: Employees/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(EmployeesViewModel model)
+        public async Task<IActionResult> Create(CreateNewEmployeeViewModel model)
         {
-            if (ModelState.IsValid)
+            try
             {
-                var user = await _userHelper.GetUserByEmailAsync(model.UserName);
-
-                if (user == null)
+                if (ModelState.IsValid)
                 {
-                    // var IdEmploy = await _userHelper.GetUserByIdAsync(user.Id);
+                    byte[] imagemBytes = null;
+                    var user = await _userHelper.GetUserByEmailAsync(this.User.Identity.Name);
+                    model.user = user;
 
-                    user = new User
+                    if (model.EmployeeImageFile != null && model.EmployeeImageFile.Length > 0)
                     {
-                        //Id = change.UserName,
-                        FirstName = model.FirstName,
-                        LastName = model.LastName,
-                        Email = model.UserName,
-                        UserName = model.UserName,
-                        Age = model.Age,
-                        PhoneNumber = model.PhoneNumber,
-                        JobTitle = model.JobTitle,
-                    };
+                        using (var memoryStream = new MemoryStream())
+                        {
+                            await model.EmployeeImageFile.CopyToAsync(memoryStream);
 
-                    //Caso não consiga criar um login novo
-
-                    var result = await _userHelper.AddUserAsync(user, model.Password);
-                    if (result != IdentityResult.Success)
-                    {
-                        ModelState.AddModelError(string.Empty, "The user couldn't be created.");
-                        return View(model);
-                    }
-
-                    //Image
-                    //var path = string.Empty;
-
-                    //if (model.ImageProfile != null && model.ImageProfile.Length > 0)
-                    //{
-                    //    path = await _imageHelper.UploadImageAsync(model.ImageProfile, "employees");
-                    //}
-
-                    //Token Email
-                    string myToken = await _userHelper.GenerateConfirmEmailTokenAsync(user);
-                    string tokenLink = Url.Action("ConfirmEmail", "Employees", new
-                    {
-                        userid = user.Id,
-                        token = myToken
-                    }, protocol: HttpContext.Request.Scheme);
-
-
-                    Responses response = _emailHelper.SendEmail(model.UserName, "Email Confirmation AirFiel", $"<h1>Employee Email Confirmation</h1>" +
-                        $"<h2>Welcome to our team!</h2>" +
-                        $"<h3>Please click in this link</h3>" +
-                        $"</br>" +
-                        $"</br>" +
-                        $"<a href = \"{tokenLink}\">Confirm Employee Email</a>");
-
-                    if (response.IsSuccess)
-                    {
-                        ViewBag.Message = "The email has been sent.";
-
-                        var employees = _converterHelper.ToEmployees(model, true);
-
-                        employees.user = await _userHelper.GetUserByEmailAsync(this.User.Identity.Name);
-                        await _employeeRepository.CreateAsync(employees);
-
-                        return View(model);
-                    }
-
-
-
-                }
-
-
-                ModelState.AddModelError(string.Empty, "The user couldn't be logged.");
-
-            }
-            return View(model);
-        }
-
-
-
-        // GET: Employees/Edit/5
-        [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> Edit(int? id)
-        {
-            if (id == null)
-            {
-                return new NotFoundViewResult("EmployeeNotFound");
-            }
-
-            var employees = await _employeeRepository.GetByIdAsync(id.Value);
-
-            if (employees == null)
-            {
-                return new NotFoundViewResult("EmployeeNotFound");
-            }
-
-            var model = _converterHelper.ToEmployeesViewModel(employees);
-            return View(model);
-        }
-
-        // POST: Employees/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        public async Task<IActionResult> Edit(EmployeesViewModel model)
-        {
-            var user = await _userHelper.GetUserByEmailAsync(this.User.Identity.Name);
-
-            if (user != null)
-            {
-                try
-                {
-                    model.FirstName = user.FirstName;
-                    model.LastName = user.LastName;
-                    model.Age = user.Age;
-                    model.PhoneNumber = user.PhoneNumber;
-
-                    //var path = model.ProfileImage;
-
-                    //if (model.ImageProfile != null && model.ImageProfile.Length > 0)
-                    //{
-                    //    path = await _imageHelper.UploadImageAsync(model.ImageProfile, "employees");
-                    //}
-
-                    var employees = _converterHelper.ToEmployees(model, false);
-
-                    employees.user = await _userHelper.GetUserByEmailAsync(this.User.Identity.Name);
-                    await _employeeRepository.UpdateAsync(employees);
-
-
-                    var response = await _userHelper.UpdateUserAsync(user);
-
-                    if (response.Succeeded)
-                    {
-                        ViewBag.UserMessage = "User updated!";
-                    }
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!await _employeeRepository.ExistAsync(model.Id))
-                    {
-                        return new NotFoundViewResult("EmployeeNotFound");
+                            // If to controll the file size less (2 MB)
+                            if (memoryStream.Length < 2097152)
+                            {
+                                model.Image = memoryStream.ToArray();
+                            }
+                            else
+                            {
+                                ModelState.AddModelError("EmployeeImageFile", "The file is too large. Max size is 2 MB");
+                                model.Stores = _employeeRepository.GetComboStores();
+                                return View(model);
+                            }
+                        }
                     }
                     else
                     {
-                        throw;
+                        string completePath = Path.Combine(_environment.WebRootPath, "assets", "images", "profile-default-image.jpg");
+                        imagemBytes = System.IO.File.ReadAllBytes(completePath);
+                        model.Image = imagemBytes.ToArray();
                     }
+
+                    var verifyUser = await _userHelper.GetUserByEmailAsync(model.Email);
+
+                    if (verifyUser == null)
+                    {
+                        var employeeUser = new User
+                        {
+                            FirstName = model.FirstName,
+                            LastName = model.LastName,
+                            Email = model.Email,
+                            UserName = model.Email,
+                            Address = model.Address,
+                            PostalCode = model.PostalCode,
+                            Location = model.Location,
+                            PhoneNumber = model.Phone,
+                            PictureSource = model.Image
+                        };
+
+                        var result = await _userHelper.AddUserAsync(employeeUser, "Aa1234567890");
+                        await _userHelper.AddUserToRoleAsync(employeeUser, "Employee");
+                        var token = await _userHelper.GenerateConfirmEmailTokenAsync(employeeUser);
+                        await _userHelper.EmailConfirmAsync(employeeUser, token);
+
+                        if (result != IdentityResult.Success)
+                        {
+                            ModelState.AddModelError(string.Empty, "The Employee couldn´t be created.");
+                            model.Stores = _employeeRepository.GetComboStores();
+                            return View(model);
+                        }
+                        else
+                        {
+                            model.EmployeeUserId = employeeUser.Id;
+                            await _employeeRepository.CreateAsync(model);
+                            return RedirectToAction(nameof(Index));
+                        }
+                    }
+
+                    ModelState.AddModelError(string.Empty, "The Employee couldn´t be created. Email already registed.");
+                    model.Stores = _employeeRepository.GetComboStores();
+                    return View(model);
                 }
                 return RedirectToAction(nameof(Index));
             }
+            catch (Exception ex)
+            {
+                ViewBag.Message = ex.Message;
+                return View(model);
+            }
+        }
+
+        // GET: Employees/Edit/??
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> Edit(int? id)
+        {
+            try
+            {
+                if (id == null)
+                {
+                    return new NotFoundViewResult("EmployeeNotFound");
+                }
+
+                var employee = await _employeeRepository.GetByIdAsync(id.Value);
+
+                if (employee == null)
+                {
+                    return new NotFoundViewResult("EmployeeNotFound");
+                }
+
+                var model = new EditEmployeeViewModel();
+
+                model.JobTitle = employee.JobTitle;
+                model.Stores = _employeeRepository.GetComboStores();
+                model.StoreId = employee.StoreId;
+
+                return View(model);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        // POST: Employees/Edit/??
+        [HttpPost]
+        public async Task<IActionResult> Edit(EditEmployeeViewModel model)
+        {
+            try
+            {
+                var employee = await _employeeRepository.GetByIdAsync(model.Id);
+                var user = await _userHelper.GetUserByEmailAsync(this.User.Identity.Name);
+
+                employee.JobTitle = model.JobTitle;
+                employee.StoreId = model.StoreId;
+                employee.user = user;
+
+                var response = _employeeRepository.UpdateAsync(employee);
+
+                response.Wait();
+
+                if (response.IsCompleted)
+                {
+                    model.Stores = _employeeRepository.GetComboStores();
+                    this.ViewBag.Message = "Employee Data has been updated!";
+                }
+                else
+                {
+                    ModelState.AddModelError(string.Empty, response.Exception.Message.ToString());
+                    model.Stores = _employeeRepository.GetComboStores();
+                }
+
+                return View(model);
+
+            }
+            catch (Exception)
+            {
+
+            }
+
             return View(model);
         }
 
-        // GET: Employees/Delete/5
+        // GET: Employees/Delete/??
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null)
+            try
             {
-                return new NotFoundViewResult("EmployeeNotFound");
+                if (id == null)
+                {
+                    return new NotFoundViewResult("EmployeeNotFound");
+                }
+
+                var employee = await _employeeRepository.GetByIdAsync(id.Value);
+
+                if (employee == null)
+                {
+                    return new NotFoundViewResult("EmployeeNotFound");
+                }
+
+                return View(employee);
             }
-
-            var employees = await _employeeRepository.GetByIdAsync(id.Value);
-
-            if (employees == null)
+            catch (Exception)
             {
-                return new NotFoundViewResult("EmployeeNotFound");
+                throw;
             }
-
-            return View(employees);
         }
 
-
-        [HttpPost]
-        public async Task<IActionResult> CreateToken([FromBody] LoginViewModel model)
+        // POST: Employees/Delete/???
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            if (this.ModelState.IsValid)
+            var employeeToDelete = await _employeeRepository.GetByIdAsync(id);
+
+            if (employeeToDelete != null)
             {
-                var user = await _userHelper.GetUserByEmailAsync(model.UserName);
-                if (user != null)
+                var userToDelete = await _userHelper.GetUserByIdAsync(employeeToDelete.EmployeeUserId);
+
+                if (userToDelete != null)
                 {
-                    var result = await _userHelper.ValidatePasswordAsync(
-                        user,
-                        model.Password);
+                    var result = await _userHelper.DeleteUserAsync(userToDelete);
+
                     if (result.Succeeded)
                     {
-                        var claims = new[]
-                        {
-                            new Claim(JwtRegisteredClaimNames.Sub, user.Email),
-                            new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
-                        };
-
-                        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Tokens:Key"])); //Algoritmo para ir buscar a key (No appsettings.json).
-                        var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256); //Gerar o token, usando o algoritmo que vem do security key. 256 bits. Depende do middleware.
-                        var token = new JwtSecurityToken(
-                            _configuration["Tokens:Issuer"],
-                            _configuration["Tokens:Audience"],
-                            claims,
-                            expires: DateTime.UtcNow.AddDays(15),
-                            signingCredentials: credentials);
-                        var results = new
-                        {
-                            token = new JwtSecurityTokenHandler().WriteToken(token),
-                            expiration = token.ValidTo
-                        };
-
-                        return this.Created(string.Empty, results);
+                        await _employeeRepository.DeleteAsync(employeeToDelete);
+                        return RedirectToAction(nameof(Index));
+                    }
+                    else
+                    {
+                        // Mensagem de erro
                     }
                 }
             }
-            return BadRequest();
-        }
 
-
-        public async Task<IActionResult> ConfirmEmail(string userId, string token)
-        {
-            if (string.IsNullOrEmpty(userId) || string.IsNullOrEmpty(token))
-            {
-                return NotFound();
-            }
-
-            var user = await _userHelper.GetUserByIdAsync(userId); //Verificar se tem user
-            if (user == null)
-            {
-                return NotFound();
-            }
-
-            var result = await _userHelper.EmailConfirmAsync(user, token); //Vê se está tudo Okay.
-
-            if (!result.Succeeded)
-            {
-                return NotFound();
-            } 
-
-            return View();
-        }
-
-
-
-
-        // POST: Employees/Delete/5
-        [HttpPost, ActionName("Delete")]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            if (_employeeRepository == null)
-            {
-                return Problem("Entity set 'DataContext.employees' is null");
-            }
-
-            var employees = await _employeeRepository.GetByIdAsync(id);
-
-            if (employees != null)
-            {
-                await _employeeRepository.DeleteAsync(employees);
-            }
-
+            ModelState.AddModelError(string.Empty, "The Employee couldn't be deleted.");
             return RedirectToAction(nameof(Index));
+        }
+
+        //GET: Employees/Details/???
+        [AllowAnonymous]
+        public async Task<IActionResult> Details(int? id)
+        {
+            try
+            {
+                if (id == null)
+                {
+                    return new NotFoundViewResult("EmployeeNotFound");
+                }
+
+                var employee = await _employeeRepository.GetByIdAsync(id.Value);
+
+                if (employee == null)
+                {
+                    return new NotFoundViewResult("EmployeeNotFound");
+                }
+
+                return View(employee);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
 
         public IActionResult EmployeeNotFound()
         {
             return View();
         }
+
     }
 }

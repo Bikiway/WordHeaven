@@ -1,16 +1,16 @@
-﻿@model List<WordHeaven_Web.Data.Entity.Book>
+﻿@model List<WordHeaven_Web.Data.Entity.Employee>
 
 @{
     ViewData["Title"] = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<center><h1>Books Catalog</h1></center>
+<center><h1>Employees List</h1></center>
 <p>
     @if (this.User.Identity.IsAuthenticated && this.User.IsInRole("Admin") || this.User.IsInRole("employee"))
     {
         <a asp-action="Create" type="submit" class="btn btn-primary" style="background-color:#e75e8d;font:bold;border-color:#e75e8d;">
-            <i class="fa fa-add" style="color:white;"></i>  Add New Book
+            <i class="fa fa-add" style="color:white;"></i>  Add New Employee
         </a>
     }
 </p>
@@ -18,7 +18,7 @@
 @if (Model == null)
 {
     <div class="question-summary">
-        <p>No books found</p>
+        <p>No employees found</p>
     </div>
 }
 else
@@ -26,15 +26,11 @@ else
     <table class="table align-middle table-secondary border-danger-subtle">
         <thead>
             <tr>
-                <th>Cover</th>
-                <th>Title</th>
-                <th>Author</th>
-                <th>Publisher</th>
-                <th>Year</th>
-                <th>Abstract</th>
-                <th>Language</th>
-                <th>Category</th>
-                <th>Value</th>
+                <th>Photo</th>
+                <th>Name</th>
+                <th>Job Title</th>
+                <th>Phone</th>
+                <th>Store</th>
                 <th></th>
             </tr>
         </thead>
@@ -43,37 +39,25 @@ else
             {
                 <tr>
                     <td>
-                        @if (item.BookCover.Length > 0)
+                        @if (item.Image.Length > 0)
                         {
-                            var base64 = Convert.ToBase64String(item.BookCover);
+                            var base64 = Convert.ToBase64String(item.Image);
                             var imgSrc = String.Format("data:image/gif;base64,{0}", base64);
                             ViewData["Image"] = imgSrc;
                             <img src="@ViewData["Image"]" alt="Image" style="width:65px;height:65px;max-width:100%;height:auto">
                         }
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.Title)
+                        @Html.DisplayFor(modelItem => item.EmployeeFullName)
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.Author)
+                        @Html.DisplayFor(modelItem => item.JobTitle)
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.Publisher)
+                        @Html.DisplayFor(modelItem => item.Phone)
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.YearOfPublication)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Abstract)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Language)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Category)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Value)
+                        @Html.DisplayFor(modelItem => item.Store.Name)
                     </td>
                     <td>
                         @if (this.User.Identity.IsAuthenticated && this.User.IsInRole("Admin") || this.User.IsInRole("employee"))

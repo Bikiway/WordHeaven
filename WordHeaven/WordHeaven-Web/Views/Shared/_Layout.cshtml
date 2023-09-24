@@ -90,8 +90,13 @@
                         <ul class="nav">
                             <li><a asp-area="" asp-controller="Home" asp-action="Home" class="active" style="color:white;">Home</a></li>
                             <li><a asp-area="" asp-controller="Books" asp-action="Index" style="color:white;">Books</a></li>
+                            
                             @if (this.User.Identity.IsAuthenticated)
                             {
+                                @if (this.User.IsInRole("Admin"))
+                                {
+                                    <li><a asp-area="" asp-controller="Home" asp-action="Management" style="color:white;">Management</a></li>
+                                }
                                 <li><a asp-area="" asp-controller="Account" asp-action="Logout" style="color:white;"><i class="fa fa-sign-in fa-solid"></i> Logout</a></li>
                                 <li><a asp-area="" asp-controller="Account" asp-action="AccountManagement" style="color:white;">@ViewData["FullName"]<img src="@ViewData["Image"]" alt=""></a></li>
                             }

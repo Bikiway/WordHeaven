@@ -6,13 +6,23 @@ namespace WordHeaven_Web.Data
 {
     public class DataContext : IdentityDbContext<User>
     {
-        public DbSet<Livro> Livros { get; set; }
-        public DbSet<Employees> Employee { get; set; }
-
-        public DbSet<Stores> Store { get; set; }
+        public DbSet<Book> Books { get; set; }
+        public DbSet<Employee> Employees { get; set; }
+        public DbSet<Store> Stores { get; set; }
 
         public DataContext(DbContextOptions<DataContext> options) : base(options)
         {
+        }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Employee>()
+        .HasOne(employee => employee.Store)
+        .WithMany(store => store.Employees) // Aqui, você está configurando a propriedade de navegação para funcionários
+        .HasForeignKey(employee => employee.StoreId)
+        .OnDelete(DeleteBehavior.Cascade);
+
+            base.OnModelCreating(modelBuilder);
         }
     }
 }

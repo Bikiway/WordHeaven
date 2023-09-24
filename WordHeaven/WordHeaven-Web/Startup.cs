@@ -7,7 +7,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using WordHeaven_Web.Data;
 using WordHeaven_Web.Data.Books;
+using WordHeaven_Web.Data.Employees;
 using WordHeaven_Web.Data.Entity;
+using WordHeaven_Web.Data.Stores;
 using WordHeaven_Web.Helpers;
 
 namespace WordHeaven_Web
@@ -43,6 +45,8 @@ namespace WordHeaven_Web
             services.AddScoped<IUserHelper, UserHelper>();
             services.AddScoped<IEmailHelper, EmailHelper>();
             services.AddScoped<IBookRepository, BookRepository>();
+            services.AddScoped<IEmployeesRepository, EmployeesRepository>();
+            services.AddScoped<IStoreRepository, StoreRepository>();
 
             services.ConfigureApplicationCookie(options =>
             {

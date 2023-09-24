@@ -1,5 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using System.Data;
 
 namespace WordHeaven_Web.Controllers
 {
@@ -16,5 +18,12 @@ namespace WordHeaven_Web.Controllers
         {
             return View();
         }
+
+        [Authorize(Roles = "Admin")]
+        public IActionResult Management()
+        {
+            return View();
+        }
+
     }
 }

@@ -6,6 +6,7 @@ using System;
 using System.Threading.Tasks;
 using WordHeaven_Web.Data.Entity;
 using WordHeaven_Web.Helpers;
+using System.Linq;
 
 namespace WordHeaven_Web.Data
 {
@@ -29,7 +30,7 @@ namespace WordHeaven_Web.Data
             await _context.Database.MigrateAsync();
 
             await _userHelper.CheckRoleAsync("Admin");
-            await _userHelper.CheckRoleAsync("employee");
+            await _userHelper.CheckRoleAsync("Employee");
 
             var user = await _userHelper.GetUserByEmailAsync("test@gmail.com");
             string completePath = Path.Combine(_environment.WebRootPath, "assets", "images", "profile-default-image.jpg");
@@ -40,11 +41,13 @@ namespace WordHeaven_Web.Data
                 user = new User
                 {
                     FirstName = "User",
-                    LastName = "Test1",
+                    LastName = "Admin",
                     Email = "test@gmail.com",
                     UserName = "test@gmail.com",
                     PhoneNumber = "123456789",
                     Address = "Rua A",
+                    PostalCode = "2600-172",
+                    Location = "Lisboa",
                     PictureSource = imagemBytes
                 };
 
@@ -67,6 +70,31 @@ namespace WordHeaven_Web.Data
                 await _userHelper.AddUserToRoleAsync(user, "Admin");
             }
 
+            if (!_context.Stores.Any())
+            {
+                AddStore("Chiado","Rua A", "Lisboa", "2600-111", "217207007", "WordHeaven.Chiado@mail.com");
+                AddStore("Amadora","Rua AA", "Lisboa", "2600-121", "217207117", "WordHeaven.Amadora@mail.com");
+                AddStore("Vila Nova de Gaia", "Rua Porto", "Vila Nova de Gaia", "2200-111", "217207303", "WordHeaven.VilaNovaDeGaia@mail.com");
+
+                await _context.SaveChangesAsync();
+            }
         }
+
+        private void AddStore(string name, string address, string location, string postalCode, string phone, string email)
+        {
+            _context.Stores.Add(new Store
+            {
+
+                Name = name,
+                Address = address,
+                Location = location,
+                PostalCode = postalCode,
+                Phone = phone,
+                Email = email,
+                
+
+            });
+        }
+
     }
 }
