@@ -32,6 +32,7 @@ namespace WordHeaven_Web.Data
             await _userHelper.CheckRoleAsync("Admin");
             await _userHelper.CheckRoleAsync("Employee");
 
+            #region
             var user = await _userHelper.GetUserByEmailAsync("test@gmail.com");
             string completePath = Path.Combine(_environment.WebRootPath, "assets", "images", "profile-default-image.jpg");
             byte[] imagemBytes = System.IO.File.ReadAllBytes(completePath);
@@ -78,8 +79,59 @@ namespace WordHeaven_Web.Data
 
                 await _context.SaveChangesAsync();
             }
-        }
 
+
+            #region
+
+            var userEmployee = await _userHelper.GetUserByEmailAsync("testEmployee@gmail.com");
+            string completePaths = Path.Combine(_environment.WebRootPath, "assets", "images", "profile-default-image.jpg");
+            byte[] imagemByte = System.IO.File.ReadAllBytes(completePath);
+
+            if (user == null)
+            {
+                user = new User
+                {
+                    FirstName = "Users",
+                    LastName = "Employee",
+                    Email = "testEmployee@gmail.com",
+                    UserName = "testEmployee@gmail.com",
+                    PhoneNumber = "123456789",
+                    Address = "Rua B",
+                    PostalCode = "2900-172",
+                    Location = "Lisboa",
+                    PictureSource = imagemBytes
+                };
+
+                var result = await _userHelper.AddUserAsync(user, "Aa1234567890");
+                if (result != IdentityResult.Success)
+                {
+                    throw new InvalidOperationException("Could not create the user in seeder");
+                }
+
+                var token = await _userHelper.GenerateConfirmEmailTokenAsync(user);
+                await _userHelper.EmailConfirmAsync(user, token);
+
+                await _userHelper.AddUserToRoleAsync(user, "Employee");
+            }
+
+            var isRole = await _userHelper.IsUserInRoleAsync(user, "Employee");
+
+            if (!isRole)
+            {
+                await _userHelper.AddUserToRoleAsync(user, "Employee");
+            }
+
+            if (!_context.Stores.Any())
+            {
+                AddStore("Chiado", "Rua A", "Lisboa", "2600-111", "217207007", "WordHeaven.Chiado@mail.com");
+                AddStore("Amadora", "Rua AA", "Lisboa", "2600-121", "217207117", "WordHeaven.Amadora@mail.com");
+
+                await _context.SaveChangesAsync();
+            }
+
+            #endregion
+        }
+        #endregion
         private void AddStore(string name, string address, string location, string postalCode, string phone, string email)
         {
             _context.Stores.Add(new Store
@@ -95,6 +147,8 @@ namespace WordHeaven_Web.Data
 
             });
         }
+
+       
 
     }
 }

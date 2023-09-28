@@ -9,6 +9,10 @@ namespace WordHeaven_Web.Data
         public DbSet<Book> Books { get; set; }
         public DbSet<Employee> Employees { get; set; }
         public DbSet<Store> Stores { get; set; }
+        public DbSet<Reservation> Reservations { get; set; }
+        public DbSet<ReservationDetails> ReservationsDetail { get; set; }
+        public DbSet<ReservationDetailsTemp> ReservationsDetailTemp { get; set; }
+
 
         public DataContext(DbContextOptions<DataContext> options) : base(options)
         {

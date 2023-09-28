@@ -32,5 +32,9 @@ namespace WordHeaven_Web.Data.Entity
         public string Email { get; set; }
 
         public List<Employee> Employees { get; set; }
+
+        public User user { get; set; }
+
+        public string FullLocation => $"{Name} - {Location}";
     }
 }
