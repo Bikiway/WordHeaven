@@ -162,15 +162,10 @@ namespace WordHeaven_Web.Data.Reservations
                     .OrderBy(o => o.Id);
         }
 
-        public async Task<Reservation> GetReservationIdAsync(int Id)
-        {
-            return await _context.Reservations.FindAsync(Id);
-        }
-
         public async Task<IQueryable<ReservationDetailsTemp>> GetReservationTempAsync(string userName)
         {
            var user = await _userHelper.GetUserByEmailAsync(userName);
-            if(user == null) { return null;}
+            if (user == null) { return null; }
 
             return _context.ReservationsDetailTemp
                 .Include(o => o.StoreName)
@@ -179,21 +174,63 @@ namespace WordHeaven_Web.Data.Reservations
                 .OrderBy(o => o.Id);
         }
 
-        public Task<int[]> GetStoresID(int Id)
+        public async Task<string> GetStoresID(int Id)
         {
-            throw new System.NotImplementedException();
+            var store = await _context.Stores
+                .Where(s => s.Id == Id)
+                .Select(s => s.Name)
+                .FirstOrDefaultAsync();
+
+            return store;
         }
 
-        public Task<int[]> RenewReservationLoan(int Id, string userName)
+        public async Task<int> LoanTimeLimit(int Id)
         {
-            throw new System.NotImplementedException();
+            var br = await _context.Reservations
+                .Where(i => i.Id == Id)
+                .Select(i => i.BookReturned)
+                .FirstOrDefaultAsync();
+
+            DateTime extra = DateTime.Today;
+
+            TimeSpan difference = br - extra;
+
+            int ThreeDaysLeft = 3;
+
+            var total = difference.Days == ThreeDaysLeft ? 1 : 0;
+             
+            return total;
+        }
+
+        public async Task ModifyStatusReservation(AlterStatusReservationViewModel model)
+        {
+            var status = await _context.Reservations.FindAsync(model.Id);
+
+            if(status == null)
+            {
+                return;
+            }
+
+            status.Id = model.Id;
+            _context.Reservations.Update(status);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task<DateTime> RenewReservationLoan(int Id, string userName)
+        {
+            var Renew = await _context.Reservations
+                .Where(s => s.Id == Id)
+                .Select(s => s.RenewBookLoan.AddDays(20))
+                .FirstOrDefaultAsync();
+
+            return Renew;
         }
 
         public async Task ReservationCompleted(ReservationCompletedViewModel model)
         {
             var reserve = await _context.Reservations.FindAsync(model.Id);
 
-            if(reserve == null)
+            if (reserve == null)
             {
                 return;
             }
@@ -203,9 +240,44 @@ namespace WordHeaven_Web.Data.Reservations
             await _context.SaveChangesAsync();
         }
 
-        public Task<int[]> ReservationOutOfTime(int Id)
+        public async Task<int> ReservationOutOfTime(int Id, DateTime extra)
         {
-            throw new System.NotImplementedException();
+            var limitPassed = await _context.Reservations
+                .Where(l => l.Id == Id)
+                .Select(l => l.ClientDidntReturnTheBook)
+                .FirstOrDefaultAsync();
+
+            if (limitPassed == true)
+            {
+                var limitAsPassed = await  _context.Reservations
+                    .Where(l => l.Id == Id)
+                    .Select(l => l.LoanTimeLimit)
+                    .FirstOrDefaultAsync();
+
+                var tax = await _context.Reservations
+                    .Where(t => t.Id == Id)
+                    .Select(t => t.PayTaxesLoan == 1)
+                    .FirstOrDefaultAsync();
+
+                var turnedIn = await _context.Reservations
+                    .Where(t => t.Id == Id)
+                    .Select(t => t.BookReturnedByClient)
+                    .FirstOrDefaultAsync();
+
+                if(turnedIn.Equals(true))
+                {
+                    extra = DateTime.Today;
+
+                    TimeSpan difference = extra - limitAsPassed;
+
+                    int total = difference.Days + Convert.ToInt32(tax);
+
+                    return total;
+                }
+            }
+
+            return 0;
+
         }
     }
 }

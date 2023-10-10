@@ -17,16 +17,14 @@ namespace WordHeaven_Web.Data.Reservations
 
         Task<IQueryable<Reservation>> GetReservationAsync(string userName);
 
-        Task<Reservation> GetReservationIdAsync(int Id);
-
         Task ReservationCompleted(ReservationCompletedViewModel model);
 
         Task<byte[]> GetBookCover(int Id);
 
-        Task<int[]> GetStoresID(int Id);
+        Task<string> GetStoresID(int Id);
 
-        Task<int[]> ReservationOutOfTime(int Id);
+        Task<int> ReservationOutOfTime(int Id);
 
-        Task<int[]> RenewReservationLoan(int Id, string userName);
+        Task<int> RenewReservationLoan(int Id, string userName);
     }
 }
