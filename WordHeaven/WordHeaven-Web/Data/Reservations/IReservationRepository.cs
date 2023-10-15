@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using WordHeaven_Web.Data.Entity;
 using WordHeaven_Web.Models.Reservation;
@@ -19,12 +20,27 @@ namespace WordHeaven_Web.Data.Reservations
 
         Task ReservationCompleted(ReservationCompletedViewModel model);
 
+        Task ModifyStatusReservation(AlterStatusReservationViewModel model);
+
+
+        //Helpers
+
         Task<byte[]> GetBookCover(int Id);
 
         Task<string> GetStoresID(int Id);
 
-        Task<int> ReservationOutOfTime(int Id);
+        Task<int> ReservationOutOfTime(int Id, DateTime extra);
 
-        Task<int> RenewReservationLoan(int Id, string userName);
+        Task<bool> RenewReservationLoan(int Id);
+
+        Task<bool> ClientDidntReturnBook(int Id);
+
+        Task<int> LoanTimeLimit(int Id);
+
+        Task<bool> TaxesPayedByClient(int Id);
+
+        Task<bool> IsBookReturned (int Id);
+
+        Task<bool> ClientReturnedTheBook (int Id);
     }
 }

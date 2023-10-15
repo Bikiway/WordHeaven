@@ -20,6 +20,8 @@ namespace WordHeaven_Web.Data.Entity
 
         public string ClientLastName { get; set; }
 
+        public string UserName { get; set; }
+
 
         [Display(Name = "Delivery Date")]
         [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy HH:mm tt}", ApplyFormatInEditMode = false)]

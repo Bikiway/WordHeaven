@@ -28,6 +28,8 @@ namespace WordHeaven_Web.Data.Reservations
 
             var books = await _context.Books.FindAsync(model.BookId);
             var store = await _context.Stores.FindAsync(model.storeId);
+            byte imageId = Convert.ToByte(books.BookCover);
+            byte[] image = await GetBookCover(Convert.ToSByte(imageId));
 
             if (books == null && store == null)
             { return; }
@@ -45,7 +47,7 @@ namespace WordHeaven_Web.Data.Reservations
                     ClientFirstName = model.ClientFirstName,
                     ClientLastName = model.ClientLastName,
                     book = books,
-                    BookCover = model.BookCoverId,
+                    BookCover = image,
                     BookReturned = model.BookReturned,
                     LoanedBook = model.LoanedBook,
                     IsBooked = model.IsBooked,
@@ -56,6 +58,26 @@ namespace WordHeaven_Web.Data.Reservations
                 _context.ReservationsDetailTemp.Add(reserveDetailTemp);
             }
             await _context.SaveChangesAsync();
+        }
+
+        public async Task<bool> ClientDidntReturnBook(int Id)
+        {
+            var Notreturned = await _context.Reservations
+             .Where(x => x.Id == Id)
+             .Select(x => x.ClientDidntReturnTheBook)
+             .FirstOrDefaultAsync();
+
+            return Notreturned;
+        }
+
+        public async Task<bool> ClientReturnedTheBook(int Id)
+        {
+            var returned = await _context.Reservations
+                .Where(x => x.Id == Id)
+                .Select(x => x.BookReturnedByClient)
+                .FirstOrDefaultAsync();
+
+            return returned;
         }
 
         public async Task<bool> ConfirmReservationAsync(string userName)
@@ -75,18 +97,27 @@ namespace WordHeaven_Web.Data.Reservations
                 return false;
             }
 
+            int Id = reserveTemps.FirstOrDefault()?.book.Id ?? 0;
+            var image = GetBookCover(Id);
+            var renewed = RenewReservationLoan(Id);
+            var reservationOutOfTime = ReservationOutOfTime(Id, DateTime.Today);
+            var ClientDidntReturned = ClientDidntReturnBook(Id);
+            var bookReturned = ClientReturnedTheBook(Id);
+            var TimeLimit = LoanTimeLimit(Id);
+            var Payed = TaxesPayedByClient(Id);
+            var isBooked = IsBookReturned(Id);
+
+
             var detailsInfo = reserveTemps.Select(o => new ReservationDetails
             {
                 StoreName = o.StoreName,
                 bookName = o.book,
-                BookCover = o.BookCover,
+                BookCover = image.Result,
                 Request = o.Request,
                 BookReturned = o.BookReturned,
                 LoanedBook = o.LoanedBook,
+                UserName = o.UserName,
             }).ToList();
-
-            int imageId = reserveTemps.FirstOrDefault()?.book.Id ?? 0;
-            var image = GetBookCover(imageId);
 
             var reservations = new Reservation
             {
@@ -95,10 +126,17 @@ namespace WordHeaven_Web.Data.Reservations
                 ClientLastName = detailsInfo.FirstOrDefault()?.ClientLastName,
                 BookName = detailsInfo.FirstOrDefault()?.bookName.Title,
                 BookCover = (await image)[0],
-                IsBooked = true,
+                IsBooked = isBooked.Result,
                 BookReturned = detailsInfo.FirstOrDefault().BookReturned,
                 LoanedBook = detailsInfo.FirstOrDefault().LoanedBook,
+                RenewBookLoan = renewed.Result,
+                BookReturnedByClient = bookReturned.Result,
+                PayTaxesLoan = reservationOutOfTime.Result,
+                LoanTimeLimit = DateTime.FromOADate(TimeLimit.Result),
+                PayedTaxesLoan = Payed.Result,
+                ClientDidntReturnTheBook = ClientDidntReturned.Result,
                 user = user,
+                UserName = detailsInfo.FirstOrDefault()?.UserName,
                 Items = detailsInfo,
             };
 
@@ -124,25 +162,23 @@ namespace WordHeaven_Web.Data.Reservations
 
         public async Task<byte[]> GetBookCover(int Id)
         {
-            var image = await _context.Books.FirstOrDefaultAsync(b => b.Id == Id);
-          
-            if (image != null)
-            {
-                return new byte[] { Convert.ToByte(image.BookCover) };
-            }
+            var image = await _context.Books
+                .Where(i => i.Id == Id)
+                .Select(i => i.BookCover)
+                .FirstOrDefaultAsync();
 
-            return null;
+            return image;
         }
 
         public async Task<IQueryable<Reservation>> GetReservationAsync(string userName)
         {
             var user = await _userHelper.GetUserByEmailAsync(userName);
-            if(user == null)
+            if (user == null)
             {
                 return null;
             }
 
-            if(await _userHelper.IsUserInRoleAsync(user, "Employee"))
+            if (await _userHelper.IsUserInRoleAsync(user, "Employee"))
             {
                 return _context.Reservations
                     .Include(o => o.user)
@@ -164,7 +200,7 @@ namespace WordHeaven_Web.Data.Reservations
 
         public async Task<IQueryable<ReservationDetailsTemp>> GetReservationTempAsync(string userName)
         {
-           var user = await _userHelper.GetUserByEmailAsync(userName);
+            var user = await _userHelper.GetUserByEmailAsync(userName);
             if (user == null) { return null; }
 
             return _context.ReservationsDetailTemp
@@ -182,6 +218,26 @@ namespace WordHeaven_Web.Data.Reservations
                 .FirstOrDefaultAsync();
 
             return store;
+        }
+
+        public async Task<bool> IsBookReturned(int Id)
+        {
+            var book = await _context.Reservations
+                .Where(s => s.Id == Id)
+                .Select(s => s.BookReturnedByClient)
+                .FirstOrDefaultAsync();
+            
+            if(book)
+            {
+                var returned = await _context.Reservations
+                    .Where (s => s.Id == Id)
+                    .Select(s => s.IsBooked)
+                    .FirstOrDefaultAsync();
+
+                return returned;
+            }
+
+            return false;
         }
 
         public async Task<int> LoanTimeLimit(int Id)
@@ -216,14 +272,22 @@ namespace WordHeaven_Web.Data.Reservations
             await _context.SaveChangesAsync();
         }
 
-        public async Task<DateTime> RenewReservationLoan(int Id, string userName)
+        public async Task<bool> RenewReservationLoan(int Id)
         {
             var Renew = await _context.Reservations
                 .Where(s => s.Id == Id)
-                .Select(s => s.RenewBookLoan.AddDays(20))
+                .Select(s => s.RenewBookLoan)
                 .FirstOrDefaultAsync();
 
-            return Renew;
+            if(Renew == true)
+            {
+                var final = await _context.Reservations
+                    .Where(f => f.Id == Id)
+                    .Select(f => f.BookReturned.AddDays(20))
+                    .FirstOrDefaultAsync();
+            }
+
+            return Renew = false;
         }
 
         public async Task ReservationCompleted(ReservationCompletedViewModel model)
@@ -249,9 +313,9 @@ namespace WordHeaven_Web.Data.Reservations
 
             if (limitPassed == true)
             {
-                var limitAsPassed = await  _context.Reservations
+                var limitAsPassed = await _context.Reservations
                     .Where(l => l.Id == Id)
-                    .Select(l => l.LoanTimeLimit)
+                    .Select(l => l.BookReturned)
                     .FirstOrDefaultAsync();
 
                 var tax = await _context.Reservations
@@ -264,7 +328,7 @@ namespace WordHeaven_Web.Data.Reservations
                     .Select(t => t.BookReturnedByClient)
                     .FirstOrDefaultAsync();
 
-                if(turnedIn.Equals(true))
+                if (turnedIn.Equals(true))
                 {
                     extra = DateTime.Today;
 
@@ -278,6 +342,16 @@ namespace WordHeaven_Web.Data.Reservations
 
             return 0;
 
+        }
+
+        public async Task<bool> TaxesPayedByClient(int Id)
+        {
+            var taxPay = await _context.Reservations
+                .Where (t => t.Id == Id)
+                .Select (t => t.PayedTaxesLoan)
+                .FirstOrDefaultAsync();
+
+            return taxPay;
         }
     }
 }

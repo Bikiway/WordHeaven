@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -17,6 +16,9 @@ namespace WordHeaven_Web.Data.Entity
         public string ClientLastName { get; set; }
 
         public string FullClientName => $"{ClientFirstName} {ClientLastName}";
+        [Display(Name = "Email")]
+        [EmailAddress]
+        public string UserName { get; set; }
 
 
         [Display(Name = "Book")]
@@ -25,11 +27,6 @@ namespace WordHeaven_Web.Data.Entity
 
         [Display(Name = "Cover")]
         public byte BookCover { get; set; }
-
-
-        [Display(Name = "Email")]
-        [EmailAddress]
-        public string UserName { get; set; }
 
 
         [Display(Name = "Delivery Date")]
@@ -44,8 +41,10 @@ namespace WordHeaven_Web.Data.Entity
 
 
         [Display(Name = "Time Limit")]
-        public int LoanTimeLimit { get; set; }
+        public DateTime LoanTimeLimit { get; set; }
 
+
+        public bool WarningEmailSent { get; set; }
 
         [Display(Name = "Is Booked")]
         public bool IsBooked { get; set; }
@@ -69,7 +68,7 @@ namespace WordHeaven_Web.Data.Entity
 
 
         [Display(Name = "Renew Loan")]
-        public string RenewBookLoan { get; set; }
+        public bool RenewBookLoan { get; set; }
 
 
         public IEnumerable<ReservationDetails> Items { get; set; }
