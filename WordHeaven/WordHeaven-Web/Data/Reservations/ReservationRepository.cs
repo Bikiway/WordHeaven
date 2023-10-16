@@ -240,29 +240,25 @@ namespace WordHeaven_Web.Data.Reservations
             return false;
         }
 
-        public async Task<int> LoanTimeLimit(int Id)
+        public async Task<DateTime> GetReminderDate(int Id)
         {
             var br = await _context.Reservations
                 .Where(i => i.Id == Id)
                 .Select(i => i.BookReturned)
                 .FirstOrDefaultAsync();
 
-            DateTime extra = DateTime.Today;
-
-            TimeSpan difference = br - extra;
-
-            int ThreeDaysLeft = 3;
-
-            var total = difference.Days == ThreeDaysLeft ? 1 : 0;
-             
-            return total;
+                return br.AddDays(-3);
         }
+
+
+
+             
 
         public async Task ModifyStatusReservation(AlterStatusReservationViewModel model)
         {
             var status = await _context.Reservations.FindAsync(model.Id);
 
-            if(status == null)
+            if (status == null)
             {
                 return;
             }
@@ -279,7 +275,7 @@ namespace WordHeaven_Web.Data.Reservations
                 .Select(s => s.RenewBookLoan)
                 .FirstOrDefaultAsync();
 
-            if(Renew == true)
+            if (Renew == true)
             {
                 var final = await _context.Reservations
                     .Where(f => f.Id == Id)
@@ -347,8 +343,8 @@ namespace WordHeaven_Web.Data.Reservations
         public async Task<bool> TaxesPayedByClient(int Id)
         {
             var taxPay = await _context.Reservations
-                .Where (t => t.Id == Id)
-                .Select (t => t.PayedTaxesLoan)
+                .Where(t => t.Id == Id)
+                .Select(t => t.PayedTaxesLoan)
                 .FirstOrDefaultAsync();
 
             return taxPay;
