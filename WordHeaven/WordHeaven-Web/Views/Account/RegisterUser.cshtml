@@ -6,20 +6,20 @@
 
 <Center>
     <div class="row">
-        <h2 style="color:white;">Register New User</h2>
+        <h2 style="color:goldenrod;">Register New User</h2>
         <form method="post">
             <div asp-validation-summary="ModelOnly"></div>
             <br />
             <div class="form-group">
-                <label asp-for="FirstName" style="color:white;">What´s your First Name?</label>
+                <label asp-for="FirstName" style="color:lightseagreen;">What´s your First Name?</label>
                 <input asp-for="FirstName" class="form-control" style="text-align:center;width:500px" />
                 <span asp-validation-for="FirstName" class="text-danger"></span>
                 <br />
-                <label asp-for="LastName" style="color:white;">What´s your Last Name?</label>
+                <label asp-for="LastName" style="color:lightseagreen;">What´s your Last Name?</label>
                 <input asp-for="LastName" class="form-control" style="text-align:center;width:500px" />
                 <span asp-validation-for="LastName" class="text-danger"></span>
                 <br />
-                <label asp-for="Username" style="color:white;">What´s your e-mail account?</label>
+                <label asp-for="Username" style="color:lightseagreen;">What´s your e-mail account?</label>
                 <input asp-for="Username" class="form-control" style="text-align:center;width:500px" />
                 <span asp-validation-for="Username" class="text-danger"></span>
             </div>
@@ -29,11 +29,11 @@
             </div>
             <br />
             <div class="form-group">
-                <button type="submit" class="btn btn-primary" style="background-color:#e75e8d;width:240px;height:35px;font:bold;border-color:#e75e8d;">
-                    <i class="fa fa-save" style="color:white;"></i>  Register
+                <button type="submit" class="btn btn-primary" style="background-color:darkcyan;width:240px;height:35px;font:bold;border-color:darkcyan; color:whitesmoke">
+                    <i class="fa fa-save" style="color:whitesmoke;"></i>  Register
                 </button>
-                <a asp-controller="Account" asp-action="Login" class="btn btn-primary" style="background:#bd5bcc;width:240px;height:35px;border-color:#bd5bcc;">
-                    <i class="fa fa-arrow-left" style="color:white;"></i>  Back to Login
+                <a asp-controller="Account" asp-action="Login" class="btn btn-primary" style="background-color: darkorange;width:240px;height:35px;border-color:darkorange;color: antiquewhite">
+                    <i class="fa fa-arrow-left" style="color:antiquewhite;"></i>  Back to Login
                 </a>
             </div>
         </form>

@@ -40,6 +40,7 @@ namespace WordHeaven_Web.Data.Entity
         public DateTime BookReturned { get; set; }
 
 
+
         [Display(Name = "Time Limit")]
         [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy HH:mm tt}", ApplyFormatInEditMode = false)]
         public DateTime LoanTimeLimit { get; set; }

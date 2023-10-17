@@ -75,7 +75,7 @@
                     <nav class="main-nav">
                         <!-- ***** Logo Start ***** -->
                         <a asp-area="" asp-controller="Home" asp-action="Home" class="logo">
-                            <img src="~/assets/images/logo.png" alt="" />
+                            <img src="~/assets/images/logo.jpg" alt="" />
                         </a>
                         <!-- ***** Logo End ***** -->
                         <!-- ***** Search End ***** -->
@@ -95,14 +95,14 @@
                             {
                                 @if (this.User.IsInRole("Admin"))
                                 {
-                                    <li><a asp-area="" asp-controller="Home" asp-action="Management" style="color:white;">Management</a></li>
+                                    <li><a asp-area="" asp-controller="Home" asp-action="Management" style="color:lightgrey;">Management</a></li>
                                 }
-                                <li><a asp-area="" asp-controller="Account" asp-action="Logout" style="color:white;"><i class="fa fa-sign-in fa-solid"></i> Logout</a></li>
-                                <li><a asp-area="" asp-controller="Account" asp-action="AccountManagement" style="color:white;">@ViewData["FullName"]<img src="@ViewData["Image"]" alt=""></a></li>
+                                <li><a asp-area="" asp-controller="Account" asp-action="Logout" style="color:lightgrey;"><i class="fa fa-sign-in fa-solid"></i> Logout</a></li>
+                                <li><a asp-area="" asp-controller="Account" asp-action="AccountManagement" style="color:lightgrey;">@ViewData["FullName"]<img src="@ViewData["Image"]" alt=""></a></li>
                             }
                             else
                             {
-                                <li><a asp-area="" asp-controller="Account" asp-action="Login" style="background-color:#e75e8d; color:white;"><i class="fa fa-sign-out fa-solid"></i> Login</a></li>
+                                <li><a asp-area="" asp-controller="Account" asp-action="Login" style="background-color:whitesmoke; color:cadetblue;"><i class="fa fa-sign-out fa-solid"></i> Login</a></li>
                             }
                         </ul>
                         <!-- ***** Menu End ***** -->

@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace WordHeaven_Web.Migrations
 {
-    public partial class InitDb : Migration
+    public partial class InitDB : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -50,24 +50,6 @@ namespace WordHeaven_Web.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AspNetUsers", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Stores",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Address = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    Location = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    PostalCode = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Phone = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Email = table.Column<string>(type: "nvarchar(max)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Stores", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -205,6 +187,31 @@ namespace WordHeaven_Web.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Stores",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Address = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    Location = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    PostalCode = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Phone = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    userId = table.Column<string>(type: "nvarchar(450)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Stores", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Stores_AspNetUsers_userId",
+                        column: x => x.userId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Employees",
                 columns: table => new
                 {
@@ -238,6 +245,128 @@ namespace WordHeaven_Web.Migrations
                         principalTable: "Stores",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Reservations",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    StoreNameId = table.Column<int>(type: "int", nullable: true),
+                    ClientFirstName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ClientLastName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    UserName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    BookName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    BookCover = table.Column<byte>(type: "tinyint", nullable: false),
+                    LoanedBook = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    BookReturned = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    LoanTimeLimit = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    WarningEmailSent = table.Column<bool>(type: "bit", nullable: false),
+                    IsBooked = table.Column<bool>(type: "bit", nullable: false),
+                    BookReturnedByClient = table.Column<bool>(type: "bit", nullable: false),
+                    ClientDidntReturnTheBook = table.Column<bool>(type: "bit", nullable: false),
+                    PayTaxesLoan = table.Column<int>(type: "int", nullable: false),
+                    PayedTaxesLoan = table.Column<bool>(type: "bit", nullable: false),
+                    RenewBookLoan = table.Column<bool>(type: "bit", nullable: false),
+                    userId = table.Column<string>(type: "nvarchar(450)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Reservations", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Reservations_AspNetUsers_userId",
+                        column: x => x.userId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Reservations_Stores_StoreNameId",
+                        column: x => x.StoreNameId,
+                        principalTable: "Stores",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ReservationsDetailTemp",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    StoreNameId = table.Column<int>(type: "int", nullable: true),
+                    ClientFirstName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ClientLastName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    bookId = table.Column<int>(type: "int", nullable: true),
+                    BookCover = table.Column<byte[]>(type: "varbinary(max)", nullable: true),
+                    UserName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    LoanedBook = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    BookReturned = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Request = table.Column<int>(type: "int", nullable: false),
+                    IsBooked = table.Column<bool>(type: "bit", nullable: false),
+                    userId = table.Column<string>(type: "nvarchar(450)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ReservationsDetailTemp", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ReservationsDetailTemp_AspNetUsers_userId",
+                        column: x => x.userId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_ReservationsDetailTemp_Books_bookId",
+                        column: x => x.bookId,
+                        principalTable: "Books",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_ReservationsDetailTemp_Stores_StoreNameId",
+                        column: x => x.StoreNameId,
+                        principalTable: "Stores",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ReservationsDetail",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    StoreNameId = table.Column<int>(type: "int", nullable: true),
+                    bookNameId = table.Column<int>(type: "int", nullable: true),
+                    BookCover = table.Column<byte[]>(type: "varbinary(max)", nullable: true),
+                    ClientFirstName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ClientLastName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    UserName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    LoanedBook = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    BookReturned = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Request = table.Column<int>(type: "int", nullable: false),
+                    ReservationId = table.Column<int>(type: "int", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ReservationsDetail", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ReservationsDetail_Books_bookNameId",
+                        column: x => x.bookNameId,
+                        principalTable: "Books",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_ReservationsDetail_Reservations_ReservationId",
+                        column: x => x.ReservationId,
+                        principalTable: "Reservations",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_ReservationsDetail_Stores_StoreNameId",
+                        column: x => x.StoreNameId,
+                        principalTable: "Stores",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateIndex(
@@ -293,6 +422,51 @@ namespace WordHeaven_Web.Migrations
                 name: "IX_Employees_userId",
                 table: "Employees",
                 column: "userId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Reservations_StoreNameId",
+                table: "Reservations",
+                column: "StoreNameId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Reservations_userId",
+                table: "Reservations",
+                column: "userId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ReservationsDetail_bookNameId",
+                table: "ReservationsDetail",
+                column: "bookNameId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ReservationsDetail_ReservationId",
+                table: "ReservationsDetail",
+                column: "ReservationId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ReservationsDetail_StoreNameId",
+                table: "ReservationsDetail",
+                column: "StoreNameId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ReservationsDetailTemp_bookId",
+                table: "ReservationsDetailTemp",
+                column: "bookId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ReservationsDetailTemp_StoreNameId",
+                table: "ReservationsDetailTemp",
+                column: "StoreNameId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ReservationsDetailTemp_userId",
+                table: "ReservationsDetailTemp",
+                column: "userId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Stores_userId",
+                table: "Stores",
+                column: "userId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -313,19 +487,28 @@ namespace WordHeaven_Web.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "Books");
+                name: "Employees");
 
             migrationBuilder.DropTable(
-                name: "Employees");
+                name: "ReservationsDetail");
+
+            migrationBuilder.DropTable(
+                name: "ReservationsDetailTemp");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
-                name: "AspNetUsers");
+                name: "Reservations");
+
+            migrationBuilder.DropTable(
+                name: "Books");
 
             migrationBuilder.DropTable(
                 name: "Stores");
+
+            migrationBuilder.DropTable(
+                name: "AspNetUsers");
         }
     }
 }

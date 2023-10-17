@@ -5,3 +5,24 @@
 
 <h1>Save Reservation</h1>
 
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="SaveReservation">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Id" />
+
+            <div class="form-group">
+                <button type="submit" value="Save" class="btn btn-primary" style="background-color: cadetblue">
+                    <i class="fa fa-bookmark" style="color: whitesmoke"></i> Save 
+                </button>
+                <a asp-action="Index" class="btn btn-success" style="font-size: 20px; color: darkorange;">Back To List</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

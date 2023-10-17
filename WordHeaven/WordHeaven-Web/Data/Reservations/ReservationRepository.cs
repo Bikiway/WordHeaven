@@ -103,7 +103,7 @@ namespace WordHeaven_Web.Data.Reservations
             var reservationOutOfTime = ReservationOutOfTime(Id, DateTime.Today);
             var ClientDidntReturned = ClientDidntReturnBook(Id);
             var bookReturned = ClientReturnedTheBook(Id);
-            var TimeLimit = LoanTimeLimit(Id);
+            var TimeLimit = GetReminderDate(Id);
             var Payed = TaxesPayedByClient(Id);
             var isBooked = IsBookReturned(Id);
 
@@ -132,7 +132,7 @@ namespace WordHeaven_Web.Data.Reservations
                 RenewBookLoan = renewed.Result,
                 BookReturnedByClient = bookReturned.Result,
                 PayTaxesLoan = reservationOutOfTime.Result,
-                LoanTimeLimit = DateTime.FromOADate(TimeLimit.Result),
+                LoanTimeLimit = TimeLimit.Result.Date,
                 PayedTaxesLoan = Payed.Result,
                 ClientDidntReturnTheBook = ClientDidntReturned.Result,
                 user = user,
@@ -226,11 +226,11 @@ namespace WordHeaven_Web.Data.Reservations
                 .Where(s => s.Id == Id)
                 .Select(s => s.BookReturnedByClient)
                 .FirstOrDefaultAsync();
-            
-            if(book)
+
+            if (book)
             {
                 var returned = await _context.Reservations
-                    .Where (s => s.Id == Id)
+                    .Where(s => s.Id == Id)
                     .Select(s => s.IsBooked)
                     .FirstOrDefaultAsync();
 
@@ -247,12 +247,12 @@ namespace WordHeaven_Web.Data.Reservations
                 .Select(i => i.BookReturned)
                 .FirstOrDefaultAsync();
 
-                return br.AddDays(-3);
+            return br.AddDays(-3);
         }
 
 
 
-             
+
 
         public async Task ModifyStatusReservation(AlterStatusReservationViewModel model)
         {

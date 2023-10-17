@@ -10,8 +10,8 @@ using WordHeaven_Web.Data;
 namespace WordHeaven_Web.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20230926151904_AnotherPull")]
-    partial class AnotherPull
+    [Migration("20231017113922_InitDB")]
+    partial class InitDB
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -257,6 +257,173 @@ namespace WordHeaven_Web.Migrations
                     b.ToTable("Employees");
                 });
 
+            modelBuilder.Entity("WordHeaven_Web.Data.Entity.Reservation", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<byte>("BookCover")
+                        .HasColumnType("tinyint");
+
+                    b.Property<string>("BookName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("BookReturned")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("BookReturnedByClient")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("ClientDidntReturnTheBook")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("ClientFirstName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ClientLastName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsBooked")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime>("LoanTimeLimit")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("LoanedBook")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("PayTaxesLoan")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("PayedTaxesLoan")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("RenewBookLoan")
+                        .HasColumnType("bit");
+
+                    b.Property<int?>("StoreNameId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UserName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("WarningEmailSent")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("userId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("StoreNameId");
+
+                    b.HasIndex("userId");
+
+                    b.ToTable("Reservations");
+                });
+
+            modelBuilder.Entity("WordHeaven_Web.Data.Entity.ReservationDetails", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<byte[]>("BookCover")
+                        .HasColumnType("varbinary(max)");
+
+                    b.Property<DateTime>("BookReturned")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("ClientFirstName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ClientLastName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("LoanedBook")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("Request")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("ReservationId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("StoreNameId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UserName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("bookNameId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ReservationId");
+
+                    b.HasIndex("StoreNameId");
+
+                    b.HasIndex("bookNameId");
+
+                    b.ToTable("ReservationsDetail");
+                });
+
+            modelBuilder.Entity("WordHeaven_Web.Data.Entity.ReservationDetailsTemp", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<byte[]>("BookCover")
+                        .HasColumnType("varbinary(max)");
+
+                    b.Property<DateTime>("BookReturned")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("ClientFirstName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ClientLastName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsBooked")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime>("LoanedBook")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("Request")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("StoreNameId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UserName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("bookId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("userId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("StoreNameId");
+
+                    b.HasIndex("bookId");
+
+                    b.HasIndex("userId");
+
+                    b.ToTable("ReservationsDetailTemp");
+                });
+
             modelBuilder.Entity("WordHeaven_Web.Data.Entity.Store", b =>
                 {
                     b.Property<int>("Id")
@@ -289,7 +456,12 @@ namespace WordHeaven_Web.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("userId")
+                        .HasColumnType("nvarchar(450)");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("userId");
 
                     b.ToTable("Stores");
                 });
@@ -458,6 +630,75 @@ namespace WordHeaven_Web.Migrations
                     b.Navigation("Store");
 
                     b.Navigation("user");
+                });
+
+            modelBuilder.Entity("WordHeaven_Web.Data.Entity.Reservation", b =>
+                {
+                    b.HasOne("WordHeaven_Web.Data.Entity.Store", "StoreName")
+                        .WithMany()
+                        .HasForeignKey("StoreNameId");
+
+                    b.HasOne("WordHeaven_Web.Data.Entity.User", "user")
+                        .WithMany()
+                        .HasForeignKey("userId");
+
+                    b.Navigation("StoreName");
+
+                    b.Navigation("user");
+                });
+
+            modelBuilder.Entity("WordHeaven_Web.Data.Entity.ReservationDetails", b =>
+                {
+                    b.HasOne("WordHeaven_Web.Data.Entity.Reservation", null)
+                        .WithMany("Items")
+                        .HasForeignKey("ReservationId");
+
+                    b.HasOne("WordHeaven_Web.Data.Entity.Store", "StoreName")
+                        .WithMany()
+                        .HasForeignKey("StoreNameId");
+
+                    b.HasOne("WordHeaven_Web.Data.Entity.Book", "bookName")
+                        .WithMany()
+                        .HasForeignKey("bookNameId");
+
+                    b.Navigation("bookName");
+
+                    b.Navigation("StoreName");
+                });
+
+            modelBuilder.Entity("WordHeaven_Web.Data.Entity.ReservationDetailsTemp", b =>
+                {
+                    b.HasOne("WordHeaven_Web.Data.Entity.Store", "StoreName")
+                        .WithMany()
+                        .HasForeignKey("StoreNameId");
+
+                    b.HasOne("WordHeaven_Web.Data.Entity.Book", "book")
+                        .WithMany()
+                        .HasForeignKey("bookId");
+
+                    b.HasOne("WordHeaven_Web.Data.Entity.User", "user")
+                        .WithMany()
+                        .HasForeignKey("userId");
+
+                    b.Navigation("book");
+
+                    b.Navigation("StoreName");
+
+                    b.Navigation("user");
+                });
+
+            modelBuilder.Entity("WordHeaven_Web.Data.Entity.Store", b =>
+                {
+                    b.HasOne("WordHeaven_Web.Data.Entity.User", "user")
+                        .WithMany()
+                        .HasForeignKey("userId");
+
+                    b.Navigation("user");
+                });
+
+            modelBuilder.Entity("WordHeaven_Web.Data.Entity.Reservation", b =>
+                {
+                    b.Navigation("Items");
                 });
 
             modelBuilder.Entity("WordHeaven_Web.Data.Entity.Store", b =>

@@ -35,7 +35,7 @@ namespace WordHeaven_Web.Data.Reservations
 
         Task<bool> ClientDidntReturnBook(int Id);
 
-        Task<int> LoanTimeLimit(int Id);
+        Task<DateTime> GetReminderDate(int Id);
 
         Task<bool> TaxesPayedByClient(int Id);
 

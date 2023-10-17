@@ -1,19 +1,13 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
-using Microsoft.IdentityModel.Tokens;
-using System;
 using System.Collections.Generic;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
 using System.Threading.Tasks;
 using WordHeaven_Web.Data.Books;
 using WordHeaven_Web.Data.Reservations;
 using WordHeaven_Web.Data.Stores;
 using WordHeaven_Web.Helpers;
 using WordHeaven_Web.Models.Reservation;
-using WordHeaven_Web.Models.Users;
 
 namespace WordHeaven_Web.Controllers
 {
@@ -208,9 +202,9 @@ namespace WordHeaven_Web.Controllers
         public async Task SendWarningEmail(int Id)
         {
             var reservationId = await _reservationRepository.GetByIdAsync(Id);
-            var limit = await _reservationRepository.LoanTimeLimit(reservationId.Id);
+           var limit = await _reservationRepository.GetReminderDate(reservationId.Id);
 
-            if (limit > 0)
+           if (limit.Date != null)
             {
                 var user = await _userHelper.GetUserByEmailAsync(reservationId.UserName);
 
@@ -261,17 +255,17 @@ namespace WordHeaven_Web.Controllers
                 return NotFound();
             }
 
-            var result = await _userHelper.EmailConfirmAsync(user, token); 
+            var result = await _userHelper.EmailConfirmAsync(user, token);
 
             if (!result.Succeeded)
             {
                 return NotFound();
             }
-           
+
             await _reservationRepository.RenewReservationLoan(reserveId.Id);
 
             return View();
         }
- 
+
     }
 }

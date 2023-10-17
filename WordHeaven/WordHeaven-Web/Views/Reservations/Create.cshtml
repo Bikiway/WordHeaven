@@ -3,5 +3,156 @@
     ViewData["Title"] = "Create";
 }
 
-<h1>Create</h1>
+<h1 style="color:cadetblue">Create</h1>
+
+<p>
+    <a asp-action="MakeReservation" class="btn btn-secondary">Add New Reservation</a>
+    <a asp-action="ConfirmReservation" class="btn btn-success" id="btnConfirm">Confirm Reservation</a>
+</p>
+
+
+<table class="table">
+
+    <thead>
+        <tr>
+
+            <th>
+                @Html.DisplayNameFor(model=>model.book)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model=>model.BookCover)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model=>model.UserName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model=>model.IsBooked)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model=>model.LoanedBook)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model=>model.BookReturned)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model=>model.StoreName)
+            </th>
+        </tr>
+    </thead>
+
+    <tbody>
+
+        @foreach (var item in Model)
+        {
+            <tr>
+
+                <td>
+                    @Html.DisplayFor(modelitem=>item.book)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelitem=>item.BookCover)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelitem=>item.UserName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelitem=>item.IsBooked)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelitem=>item.LoanedBook)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelitem=>item.BookReturned)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelitem=>item.StoreName)
+                </td>
+
+                <td id="@item.Id">
+                    <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger" id="btnDeleteItem">Delete</a>
+                </td>
+            </tr>
+        }
+
+    </tbody>
+
+</table>
+
+<div id="confirmDialog" class="modal fade">
+
+    <div class="modal-dialog modal-sm">
+
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h4 class="modal-title">Confirm reservation?</h4>
+                <button type="button" class="close" data-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p>Do you want to reserve this book?</p>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success" id="btnYes">Yes</button>
+                <button type="button" class="btn btn-danger" id="btnNo">No</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="deleteDialog" class="modal fade">
+
+    <div class="modal-dialog modal-sm">
+
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h4 class="modal-title">Delete</h4>
+                <button type="button" class="close" data-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to delete?</p>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" id="btnYesDelete">Delete</button>
+                <button type="button" class="btn btn-success" id="btnNoDelete">No</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts
+    {
+    <script type="text/javascript">
+        $(document).ready(function () {
+            var id = 0;
+
+            $("#btnConfirm").click(function () {
+                $("#confirmDialog").modal("show");
+                return false;
+            });
+            $("#btnNo").click(function () {
+                $("#confirmDialog").modal("hide");
+                return false;
+            });
+            $("#btnYes").click(function () {
+                window.location.href = "/Reservations/ConfirmReservation";
+            });
+
+            $("a[id*= btnDeleteItem]").click(function () {
+                id = $(this).parent()[0].id;
+                $("#deleteDialog").modal("show");
+                return false;
+            });
+            $("#btnNoDelete").click(function () {
+                $("#deleteDialog").modal("hide");
+                return false;
+            });
+            $("#btnYesDelete").click(function () {
+                window.location.href = "/Reservations/Delete/" + id;
+            });
+        });
+    </script>
+}
 

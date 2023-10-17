@@ -5,11 +5,11 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<center><h2>Edit book "@Html.DisplayFor(model => model.Title)"</h2></center>
+<center><h2 style="color:cadetblue">Edit book "@Html.DisplayFor(model => model.Title)"</h2></center>
 <center><p style="color:chartreuse">@ViewBag.Message </p></center>
 <br />
 <form asp-action="Edit" enctype="multipart/form-data" style="height:423px;">
-    <div class="row" style="color:white;">
+    <div class="row" style="color:lightcoral;">
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
         <div class="col-md-4">
             <div class="form-group">
@@ -57,11 +57,11 @@
     <br />
     <center>
         <div class="form-group">
-            <button type="submit" value="Edit" class="btn btn-primary" style="background-color:#e75e8d;width:250px;height:35px;font:bold;border-color:#e75e8d;">
-                <i class="fas fa-save" style="color:white;"></i> Save
+            <button type="submit" value="Edit" class="btn btn-primary" style="background-color:darkgoldenrod;width:250px;height:35px;font:bold;border-color:darkgoldenrod;color:antiquewhite">
+                <i class="fas fa-save" style="color:antiquewhite;"></i> Save
             </button>
-            <a asp-action="Index" class="btn btn-success" style="background:#bd5bcc;width:250px;height:35px;border-color:#bd5bcc;">
-                <i class="fa fa-chevron-left" style="color:white;"></i> Back to List
+            <a asp-action="Index" class="btn btn-success" style="background-color:darkcyan;width:250px;height:35px;border-color:darkcyan;color:whitesmoke">
+                <i class="fa fa-chevron-left" style="color:whitesmoke;"></i> Back to List
             </a>
         </div>
     </center>
