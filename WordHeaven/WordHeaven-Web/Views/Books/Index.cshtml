@@ -78,9 +78,9 @@ else
                     <td>
                         @if (this.User.Identity.IsAuthenticated && this.User.IsInRole("Admin") || this.User.IsInRole("employee"))
                         {
-                            <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-secondary edit-button" id="edit" style="background-color: whitesmoke; color: grey;">Edit |</a>
-                            <a asp-action = "Details" asp-route-id = "@item.Id" class="btn btn-secondary details-button" id="details" style="background-color: whitesmoke; color: grey;">Details |</a>
-                            <a asp-action="Delete" asp-route-id="@item.Id" id="delete" class="btn btn-secondary delete-button" style="background-color: whitesmoke; color: grey;">Delete </a>
+                            <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-secondary edit-button" id="edit" style="background-color: whitesmoke; color: grey;">Edit</a>
+                            <a asp-action = "Details" asp-route-id = "@item.Id" class="btn btn-secondary details-button" id="details" style="background-color: whitesmoke; color: grey;">Details</a>
+                            <a asp-action="Delete" asp-route-id="@item.Id" id="delete" class="btn btn-secondary delete-button" style="background-color: whitesmoke; color: grey;">Delete</a>
                         }
                         else
                         {

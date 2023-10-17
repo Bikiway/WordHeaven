@@ -13,17 +13,15 @@ namespace WordHeaven_Web.Data.Reservations
     {
         private readonly DataContext _context;
         private readonly IUserHelper _userHelper;
-        private readonly IStoreRepository _storeRepository;
-        public ReservationRepository(DataContext context, IStoreRepository storeRepository, IUserHelper userHelper) : base(context)
+        public ReservationRepository(DataContext context, IUserHelper userHelper) : base(context)
         {
             _context = context;
             _userHelper = userHelper;
-            _storeRepository = storeRepository;
         }
 
         public async Task AddItemToReservationAsync(AddReservationViewModel model, string userName)
         {
-            var user = await _userHelper.GetUserByEmailAsync(userName);
+            var user = await _userHelper.GetUserByEmailAsync(model.UserName);
             if (user == null) { return; }
 
             var books = await _context.Books.FindAsync(model.BookId);
@@ -186,16 +184,16 @@ namespace WordHeaven_Web.Data.Reservations
                     .ThenInclude(s => s.StoreName)
                     .Include(o => o.Items)
                     .ThenInclude(b => b.bookName)
-                    .OrderBy(o => o.Id);
+                    .OrderBy(o => o.LoanedBook);
             }
 
             return _context.Reservations
+                    .Include(o => o.user)
                     .Include(o => o.Items)
                     .ThenInclude(s => s.StoreName)
                     .Include(o => o.Items)
                     .ThenInclude(b => b.bookName)
-                    .Where(u => u.user == user)
-                    .OrderBy(o => o.Id);
+                    .OrderBy(o => o.LoanedBook);
         }
 
         public async Task<IQueryable<ReservationDetailsTemp>> GetReservationTempAsync(string userName)

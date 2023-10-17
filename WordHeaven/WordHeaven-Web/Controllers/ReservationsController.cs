@@ -4,6 +4,7 @@ using Microsoft.Extensions.Configuration;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using WordHeaven_Web.Data.Books;
+using WordHeaven_Web.Data.Entity;
 using WordHeaven_Web.Data.Reservations;
 using WordHeaven_Web.Data.Stores;
 using WordHeaven_Web.Helpers;
@@ -44,53 +45,56 @@ namespace WordHeaven_Web.Controllers
             return View(model);
         }
 
-
-        public IActionResult MakeReservation()
-        {
-            return View();
-        }
-
         [HttpPost]
-        public async Task<IActionResult> MakeReservation(AddReservationViewModel model, int Id)
+        public async Task<IActionResult> MakeReservation(AddReservationViewModel model)
         {
             if (ModelState.IsValid)
             {
-                var user = await _userHelper.GetUserByEmailAsync(model.UserName);
-                var image = await _reservationRepository.GetBookCover(Id);
+                await _reservationRepository.AddItemToReservationAsync(model, model.UserName);
+
+                var user = await _userHelper.GetUserByEmailAsync(this.User.Identity.Name);
 
                 if (user == null)
                 {
-                    var arvm = new AddReservationViewModel
+
+                    user = new User
                     {
-                        Stores = _storeRepository.GetComboStoresNames(),
-                        Books = _bookRepository.GetComboBooks(),
-                        BookCoverId = image,
-                        ClientFirstName = model.ClientFirstName,
-                        ClientLastName = model.ClientLastName,
+                        FirstName = model.ClientFirstName,
+                        LastName = model.ClientLastName,
+                        Email = model.UserName,
                         UserName = model.UserName,
-                        BookReturned = model.BookReturned,
-                        LoanedBook = model.LoanedBook,
-                        IsBooked = model.IsBooked,
+                        EmailConfirmed = true,
+                        Address = "Ruas",
+                        PhoneNumber = "9999",
                     };
 
+                    string myToken = await _userHelper.GenerateConfirmEmailTokenAsync(user);
+                    string tokenLink = Url.Action("ConfirmEmail", "Reservations", new
+                    {
+                        userid = user.Id,
+                        token = myToken
+                    }, protocol: HttpContext.Request.Scheme);
+
                     Responses respond = _emailHelper.SendEmail(model.UserName, "Email Confirmation WordHeaven",
-                       $"<h1>Reservation Confirmed</h1>" +
-                       $"<h2>Thank you for choosing WordHeaven, {model.ClientFirstName} {model.ClientLastName}</h2>" +
-                       $"</br>" +
-                       $"<h3>Client Information</h3>" +
-                       $"</br>" +
-                       $"</br>" +
-                       $"Client Full Name: {model.ClientFirstName} {model.ClientLastName}" +
-                       $"Book: {model.Books}" +
-                       $"Time Span: {model.LoanedBook} to {model.BookReturned}" +
-                       $"</br>" +
-                       $"</br>" +
-                       $"<p>We hope for you to enjoy your reading, but don't forget to return the book because others might want to experience your journey too.</p>" +
-                       $"</br>" +
-                       $"</br>" +
-                       $"<p>Best regards</p>" +
-                       $"</br>" +
-                       $"<p>Tatiane Avellar</p>");
+                           $"<h1>Reservation Confirmed</h1>" +
+                           $"<h2>Thank you for choosing WordHeaven, {model.ClientFirstName} {model.ClientLastName}</h2>" +
+                           $"</br>" +
+                           $"<h3>Client Information</h3>" +
+                           $"</br>" +
+                           $"</br>" +
+                           $"Client Full Name: {model.ClientFirstName} {model.ClientLastName}" +
+                           $"Book: {model.Books}" +
+                           $"Time Span: {model.LoanedBook} to {model.BookReturned}" +
+                           $"</br>" +
+                           $"</br>" +
+                           $"<p>We hope for you to enjoy your reading, but don't forget to return the book because others might want to experience your journey too.</p>" +
+                           $"</br>" +
+                           $"To confirm this reservation, please click in this <a href= \"{tokenLink}\"> link </a>" +
+                           $"</br>" +
+                           $"</br>" +
+                           $"<p>Best regards</p>" +
+                           $"</br>" +
+                           $"<p>Tatiane Avellar</p>");
 
                     if (respond.IsSuccess)
                     {
@@ -98,11 +102,57 @@ namespace WordHeaven_Web.Controllers
                     }
 
                     await _reservationRepository.GetReservationTempAsync(model.UserName);
-                    return View(arvm);
+                    return RedirectToAction("create");
                 }
+
+
+            }
+            return View(model);
+        }
+
+        public async Task<IActionResult> ConfirmEmail(string userId, string token)
+        {
+            if (string.IsNullOrEmpty(userId) || string.IsNullOrEmpty(token))
+            {
+                return NotFound();
             }
 
-            return View(model);
+            var user = await _userHelper.GetUserByIdAsync(userId);
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            var result = await _userHelper.EmailConfirmAsync(user, token);
+
+            if (!result.Succeeded)
+            {
+                return NotFound();
+            }
+
+            return View();
+        }
+
+
+        public async Task<IActionResult> MakeReservation(AddReservationViewModel model, int Id)
+        {
+            var bookId = model.BookId;
+            var image = await _reservationRepository.GetBookCover(bookId);
+
+            var arvm = new AddReservationViewModel
+            {
+                Stores = _storeRepository.GetComboStoresNames(),
+                Books = _bookRepository.GetComboBooks(),
+                BookCoverId = image,
+                ClientFirstName = model.ClientFirstName,
+                ClientLastName = model.ClientLastName,
+                UserName = model.UserName,
+                BookReturned = model.BookReturned,
+                LoanedBook = model.LoanedBook,
+                IsBooked = model.IsBooked,
+            };
+
+            return View(arvm);
         }
 
 
@@ -202,9 +252,9 @@ namespace WordHeaven_Web.Controllers
         public async Task SendWarningEmail(int Id)
         {
             var reservationId = await _reservationRepository.GetByIdAsync(Id);
-           var limit = await _reservationRepository.GetReminderDate(reservationId.Id);
+            var limit = await _reservationRepository.GetReminderDate(reservationId.Id);
 
-           if (limit.Date != null)
+            if (limit.Date != null)
             {
                 var user = await _userHelper.GetUserByEmailAsync(reservationId.UserName);
 

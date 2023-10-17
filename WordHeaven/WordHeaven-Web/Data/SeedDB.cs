@@ -85,9 +85,9 @@ namespace WordHeaven_Web.Data
 
             var userEmployee = await _userHelper.GetUserByEmailAsync("testEmployee@gmail.com");
             string completePaths = Path.Combine(_environment.WebRootPath, "assets", "images", "profile-default-image.jpg");
-            byte[] imagemByte = System.IO.File.ReadAllBytes(completePath);
+            byte[] imagemByte = System.IO.File.ReadAllBytes(completePaths);
 
-            if (user == null)
+            if (userEmployee == null)
             {
                 user = new User
                 {
@@ -99,7 +99,7 @@ namespace WordHeaven_Web.Data
                     Address = "Rua B",
                     PostalCode = "2900-172",
                     Location = "Lisboa",
-                    PictureSource = imagemBytes
+                    PictureSource = imagemByte
                 };
 
                 var result = await _userHelper.AddUserAsync(user, "Aa1234567890");

@@ -4,8 +4,9 @@
 }
 
 <h1 style="color:darkolivegreen">Manage Reservations</h1>
-
-@if (this.User.IsInRole("Employees"))
+<br />
+<br />
+@if (this.User.IsInRole("Employee"))
 {
     <p>
         <a asp-action="Create" class="btn btn-primary" style="background-color:cadetblue;font-size: 20px; color: whitesmoke; border-color:cadetblue">Create New</a>
@@ -18,12 +19,12 @@
         <a asp-action="" class="btn btn-light" style="font-size: 20px; color: midnightblue">Report</a>
     </p>
 }
-
+<br />
 
 <table class="table">
     <thead>
         <tr>
-            @if (this.User.IsInRole("Admin") || (this.User.IsInRole("Employees")))
+            @if (this.User.IsInRole("Admin") || (this.User.IsInRole("Employee")))
             {
                 <th>
                     Employee
@@ -60,7 +61,7 @@
         @foreach (var item in Model)
         {
             <tr>
-                @if (this.User.IsInRole("Admin") || (this.User.IsInRole("Employees")))
+                @if (this.User.IsInRole("Admin") || (this.User.IsInRole("Employee")))
                 {
                     <td>
                         @Html.DisplayFor(modelItem => item.user.UserName)
@@ -92,20 +93,20 @@
                     </td>
 
                     <td>
-                       @* @if ( item.BookReturned)
+                        @if (item.LoanTimeLimit == item.BookReturned)
                         {
                             <input type="hidden" asp-for="@item.Id">
                             <a asp-action="ModifyReservation" asp-route-id="@item.Id" class="btn btn-warning status-button" style="background-color: whitesmoke; color: grey;">Check Status</a>
                         }
-*@
-                       @* else
-                        {*@
+
+                        else
+                        {
                             <input type="hidden" asp-for="@item.Id">
                             <a asp-action="ModifyReservation" asp-route-id="@item.Id" class="btn btn-primary manage-button" style="background-color: whitesmoke; color: grey;">Manage</a>
-                       @* }*@
+                        }
                     </td>
                 }
-                @if (this.User.IsInRole("Employees"))
+                @if (this.User.IsInRole("Employee"))
                 {
                     <td>
                         <a asp-action="SaveRoute" asp-route-id="@item.Id" class="btn btn-secondary save-button" style="background-color: whitesmoke; color: grey;">Save</a>

@@ -9,6 +9,7 @@ using WordHeaven_Web.Data;
 using WordHeaven_Web.Data.Books;
 using WordHeaven_Web.Data.Employees;
 using WordHeaven_Web.Data.Entity;
+using WordHeaven_Web.Data.Reservations;
 using WordHeaven_Web.Data.Stores;
 using WordHeaven_Web.Helpers;
 
@@ -47,6 +48,7 @@ namespace WordHeaven_Web
             services.AddScoped<IBookRepository, BookRepository>();
             services.AddScoped<IEmployeesRepository, EmployeesRepository>();
             services.AddScoped<IStoreRepository, StoreRepository>();
+            services.AddScoped<IReservationRepository, ReservationRepository>();
 
             services.ConfigureApplicationCookie(options =>
             {

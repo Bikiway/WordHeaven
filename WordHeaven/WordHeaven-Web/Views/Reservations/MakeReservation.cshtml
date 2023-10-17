@@ -1,10 +1,15 @@
 ﻿@model WordHeaven_Web.Models.Reservation.AddReservationViewModel
+@using WordHeaven_Web.Data.Entity;
+@inject IEnumerable<Book> bookCover
 @{
     ViewData["Title"] = "MakeReservation";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+   
 }
 
 <h1 style="color:indianred">Make Client Reservation</h1>
-
+<br />
 <div class="row">
 
     <div class="col-md-4">
@@ -17,32 +22,56 @@
                 <select asp-for="BookId" asp-items="Model.Books" class="form-control"></select>
                 <span asp-validation-for="BookId" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="BookCoverId" class="control-label">Depart City</label>
-                <select asp-for="BookCoverId" asp-items="Model.Books" class="form-control"></select>
-                <span asp-validation-for="BookCoverId" class="text-danger"></span>
+            <div class="row">
+               <div class="col-lg-4">
+                @if (Model.BookId > 0)
+                {
+                    @if (Model.BookCoverId.Length > 0)
+                    {
+                        var base64 = Convert.ToBase64String(Model.BookCoverId);
+                        var imgSrc = String.Format("data:image/gif;base64,{0}", base64);
+                        ViewData["Image"] = imgSrc;
+                       <img src="@ViewData["Image"]" alt="" style="border-radius: 23px;">
+                    }
+                }
+               
+               </div>
             </div>
+            <div class="form-group">
+                <label asp-for="ClientFirstName" class="control-label">client Email</label>
+                <input asp-for="ClientFirstName" class="form-control" />
+                <span asp-validation-for="ClientFirstName" class="text-danger"></span>
+            </div>
+            <br />
 
             <div class="form-group">
-                <label asp-for="UserName" class="control-label">Quantity Of Travels/Month</label>
+                <label asp-for="ClientLastName" class="control-label">client Email</label>
+                <input asp-for="ClientLastName" class="form-control" />
+                <span asp-validation-for="ClientLastName" class="text-danger"></span>
+            </div>
+            <br />
+
+            <div class="form-group">
+                <label asp-for="UserName" class="control-label">client Email</label>
                 <input asp-for="UserName" class="form-control" />
                 <span asp-validation-for="UserName" class="text-danger"></span>
             </div>
+            <br />
 
            <div class="form-icons">
                <input asp-for="LoanedBook" class="form-control" value="" placeholder="Loan Date" type="date" />
            </div>
-
+           <br />
             <div class="form-icons">
-                <input asp-for="LoanedBook" class="form-control" value="" placeholder="Return Date" type="date" />
+                <input asp-for="BookReturned" class="form-control" value="" placeholder="Return Date" type="date" />
             </div>
-
+            <br />
             <div class="form-group">
                 <label asp-for="storeId" class="control-label">Store</label>
                 <select asp-for="storeId" asp-items="Model.Stores" class="form-control"></select>
                 <span asp-validation-for="storeId" class="text-danger"></span>
             </div>
-
+            <br />
             <div class="form-group form-check">
                 <label class="form-check-label">
                     <input class="form-check-input" asp-for="IsBooked" /> @Html.DisplayNameFor(model => model.IsBooked)
