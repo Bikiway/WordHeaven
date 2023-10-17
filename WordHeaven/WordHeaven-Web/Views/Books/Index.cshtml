@@ -9,8 +9,8 @@
 <p>
     @if (this.User.Identity.IsAuthenticated && this.User.IsInRole("Admin") || this.User.IsInRole("employee"))
     {
-        <a asp-action="Create" type="submit" class="btn btn-primary" style="background-color:#e75e8d;font:bold;border-color:#e75e8d;">
-            <i class="fa fa-add" style="color:white;"></i>  Add New Book
+        <a asp-action="Create" type="submit" class="btn btn-primary" style="background-color:cadetblue;font:bold;border-color:cadetblue;">
+            <i class="fa fa-add" style="color:whitesmoke;"></i>  Add New Book
         </a>
     }
 </p>
@@ -78,9 +78,9 @@ else
                     <td>
                         @if (this.User.Identity.IsAuthenticated && this.User.IsInRole("Admin") || this.User.IsInRole("employee"))
                         {
-                            <a asp-action="Edit" class="btn btn-success" asp-route-id="@item.Id">Edit</a>
-                            <a asp-action="Details" class="btn btn-warning" asp-route-id="@item.Id">Details</a>
-                            <a asp-action="Delete" class="btn btn-danger" asp-route-id="@item.Id">Delete</a>
+                            <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-secondary edit-button" id="edit" style="background-color: whitesmoke; color: grey;">Edit |</a>
+                            <a asp-action = "Details" asp-route-id = "@item.Id" class="btn btn-secondary details-button" id="details" style="background-color: whitesmoke; color: grey;">Details |</a>
+                            <a asp-action="Delete" asp-route-id="@item.Id" id="delete" class="btn btn-secondary delete-button" style="background-color: whitesmoke; color: grey;">Delete </a>
                         }
                         else
                         {
@@ -108,5 +108,47 @@ else
                 <a class="page-link" href="@Url.Action("Index", new { page = ViewBag.CurrentPage + 1 })">Next</a>
             </li>
         </ul>
+
+        <script>
+
+            var editButton = document.querySelectorAll(".edit-button");
+            var detailsButton = document.querySelectorAll(".details-button");
+            var deleteButton = document.querySelectorAll(".delete-button");
+
+            function changeColor(element, color) {
+                element.style.backgroundColor = color;
+            }
+
+            editButton.forEach(function (element) {
+                element.addEventListener("mouseover", function () {
+                    changeColor(element, "lightgoldenyellow");
+                });
+
+                element.addEventListener("mouseout", function () {
+                    changeColor(element, "whitesmoke");
+                });
+            });
+
+            detailsButton.forEach(function (element) {
+                element.addEventListener("mouseover", function () {
+                    changeColor(element, "lightblue");
+                });
+
+                element.addEventListener("mouseout", function () {
+                    changeColor(element, "whitesmoke");
+                });
+            });
+
+            deleteButton.forEach(function (element) {
+                element.addEventListener("mouseover", function () {
+                    changeColor(element, "indianred");
+                });
+
+                element.addEventListener("mouseout", function () {
+                    changeColor(element, "whitesmoke");
+                });
+            });
+
+        </script>
     </nav>
 }

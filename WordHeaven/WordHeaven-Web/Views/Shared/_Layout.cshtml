@@ -88,21 +88,22 @@
                         <!-- ***** Search End ***** -->
                         <!-- ***** Menu Start ***** -->
                         <ul class="nav">
-                            <li><a asp-area="" asp-controller="Home" asp-action="Home" class="active" style="color:white;">Home</a></li>
-                            <li><a asp-area="" asp-controller="Books" asp-action="Index" style="color:white;">Books</a></li>
+                            <li><a asp-area="" asp-controller="Home" asp-action="Home" class="active" style="color:lightseagreen;">Home</a></li>
+                            <li><a asp-area="" asp-controller="Books" asp-action="Index" style="color: lightseagreen;">Books</a></li>
                             
                             @if (this.User.Identity.IsAuthenticated)
                             {
-                                @if (this.User.IsInRole("Admin"))
+                                @if (this.User.IsInRole("Admin") || (this.User.IsInRole("Employees")))
                                 {
-                                    <li><a asp-area="" asp-controller="Home" asp-action="Management" style="color:lightgrey;">Management</a></li>
+                                    <li><a asp-area="" asp-controller="Home" asp-action="Management" style="color:lightseagreen;">Management</a></li>
+                                    <li><a asp-area="" asp-controller="Reservations" asp-action="Index" style="color:lightseagreen;">Reservations</a></li>
                                 }
-                                <li><a asp-area="" asp-controller="Account" asp-action="Logout" style="color:lightgrey;"><i class="fa fa-sign-in fa-solid"></i> Logout</a></li>
-                                <li><a asp-area="" asp-controller="Account" asp-action="AccountManagement" style="color:lightgrey;">@ViewData["FullName"]<img src="@ViewData["Image"]" alt=""></a></li>
+                                <li><a asp-area="" asp-controller="Account" asp-action="Logout" style="color:lightseagreen;"><i class="fa fa-sign-in fa-solid"></i> Logout</a></li>
+                                <li><a asp-area="" asp-controller="Account" asp-action="AccountManagement" style="color:lightseagreen;">@ViewData["FullName"]<img src="@ViewData["Image"]" alt=""></a></li>
                             }
                             else
                             {
-                                <li><a asp-area="" asp-controller="Account" asp-action="Login" style="background-color:whitesmoke; color:cadetblue;"><i class="fa fa-sign-out fa-solid"></i> Login</a></li>
+                                <li><a asp-area="" asp-controller="Account" asp-action="Login" style="background-color:whitesmoke; color:lightseagreen;"><i class="fa fa-sign-out fa-solid"></i> Login</a></li>
                             }
                         </ul>
                         <!-- ***** Menu End ***** -->
