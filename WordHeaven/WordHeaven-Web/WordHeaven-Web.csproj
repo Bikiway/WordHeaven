@@ -4,6 +4,7 @@
 		<TargetFramework>net5.0</TargetFramework>
 		<RootNamespace>WordHeaven_Web</RootNamespace>
 		<CopyRefAssembliesToPublishDirectory>false</CopyRefAssembliesToPublishDirectory>
+		<UserSecretsId>3fbba1b0-b053-45d0-839e-c2276981b44e</UserSecretsId>
 	</PropertyGroup>
 
 	<ItemGroup>
