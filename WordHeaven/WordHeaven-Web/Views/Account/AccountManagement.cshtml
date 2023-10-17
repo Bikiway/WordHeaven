@@ -29,6 +29,9 @@
     }
     catch (Exception ex)
     {
+        var base64 = Convert.ToBase64String(user.PictureSource);
+        var imgSrc = String.Format("data:image/gif;base64,{0}", base64);
+        ViewData["Image"] = imgSrc;
     }
 }
 
@@ -53,6 +56,10 @@
                             <a asp-area="" asp-controller="Account" asp-action="ChangePassword">
                                 Change your Password
                                 <i class="fa fa-lock"></i>
+                            </a>
+                            <a asp-area="" asp-controller="Account" asp-action="Help">
+                                Report Issue's or get Help
+                                <i class="fa fa-headset"></i>
                             </a>
                         </div>
                     </div>

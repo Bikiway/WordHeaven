@@ -100,12 +100,13 @@ namespace WordHeaven_Web.Controllers
                             LastName = model.LastName,
                             Email = model.Username,
                             UserName = model.Username,
+                            Address = model.Address,
+                            PostalCode = model.PostalCode,
+                            Location = model.Location,
                             PictureSource = imagemBytes
                         };
 
                         var result = await _userHelper.AddUserAsync(user, "Aa1234567890");
-
-                        await _userHelper.AddUserToRoleAsync(user, "Manager");
 
                         if (result != IdentityResult.Success)
                         {
@@ -115,7 +116,17 @@ namespace WordHeaven_Web.Controllers
 
                         var token = await _userHelper.GenerateConfirmEmailTokenAsync(user);
 
-                        await _userHelper.EmailConfirmAsync(user, token);
+                        var confirmationLink = Url.Action(nameof(ConfirmEmail), "Account", new { token, email = model.Username }, Request.Scheme);
+
+                        _emailHelper.SendEmail($"{model.Username}", $"Welcome to WordHeaven", $"Mr. /Ms. {user.FirstName} {user.LastName},<br/><br/> " +
+                             $"Welcome to WordHeaven!<br/><br/> Here's your login and password: <br/><br/> Login: {model.Username}<br/>Password: Aa1234567890" +
+                             "<br/><br/>For your security, it is recommended that you change your password.<br/>To do this, go to: <b>My Account >> Change password</b>" +
+                             $"<br/><br/> " +
+                             $"To confirm your account, click on this link: " +
+                             $"<a href = \"{confirmationLink}\">Account Confirmation</a>" +
+                             "<br/><br/>Best regards, " +
+                             "<br/>WordHeaven");
+
 
                         ModelState.AddModelError(string.Empty, "The user as been created.");
                         return this.View();
@@ -130,10 +141,26 @@ namespace WordHeaven_Web.Controllers
             }
         }
 
+        [HttpGet]
+        public async Task<IActionResult> ConfirmEmail(string token, string email)
+        {
+            var user = await _userHelper.GetUserByEmailAsync(email);
+            if (user == null)
+                return View("Error");
+
+            if (token == String.Empty)
+                return View("Error");
+
+            await _userHelper.EmailConfirmAsync(user, token);
+            await _userHelper.LogoutAsync();
+            return View();
+        }
+
+
         #endregion Register
 
         #region Change Personal Data
-        
+
         [Authorize]
         public async Task<IActionResult> ChangePersonalInformation()
         {
@@ -195,7 +222,7 @@ namespace WordHeaven_Web.Controllers
         #endregion Change Personal Data
 
         #region Change/Recover Password
-        
+
         [Authorize]
         public IActionResult ChangePassword()
         {
@@ -293,9 +320,56 @@ namespace WordHeaven_Web.Controllers
 
         #endregion Change/Recover Password
 
+        #region Help
+
+        [Authorize]
+        public IActionResult Help()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Help(HelpViewModel model)
+        {
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    var user = await _userHelper.GetUserByEmailAsync(this.User.Identity.Name);
+
+                    _emailHelper.SendEmailWithCC("WordsHeaven@outlook.pt",user.Email, $"Report with Severity {model.Severity}: {model.Subject}",
+                         $"Mr. /Ms. {user.FullName} reports in {DateTime.Now}," +
+                         $"<br/><br/>{model.ProblemDescription}" +
+                         "</br><br/><br/>Best regards, " +
+                         $"<br/>{user.FullName}");
+
+
+                    ModelState.AddModelError(string.Empty, "The ticket as been created.");
+                    return this.View();
+                }
+            }
+            catch (Exception ex)
+            {
+                ViewBag.Message = ex.Message;
+                return View(model);
+            }
+            return View(model);
+        }
+
+        #endregion
+
         public IActionResult NotAuthorized()
         {
             return View();
         }
+
     }
 }
+
+
+
+
+
+
+
+

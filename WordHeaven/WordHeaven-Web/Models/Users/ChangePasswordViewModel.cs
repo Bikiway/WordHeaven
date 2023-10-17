@@ -4,22 +4,17 @@ namespace WordHeaven_Web.Models.Users
 {
     public class ChangePasswordViewModel
     {
-        [Required]
-        [EmailAddress]
-        [Display(Name = "Email")]
-        public string Email { get; set; }
 
         [Required]
-        [Display(Name = "Current Password")]
+        [Display(Name = "Current password")]
         public string OldPassword { get; set; }
 
         [Required]
-        [Display(Name = "New Password")]
+        [Display(Name = "New password")]
         public string NewPassword { get; set; }
 
         [Required]
-        [Display(Name = "Confirm New Password")]
         [Compare("NewPassword")]
-        public string Confirm { get; set; }
+        public string ConfirmNewPassword { get; set; }
     }
 }

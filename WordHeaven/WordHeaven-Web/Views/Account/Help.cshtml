@@ -1,0 +1,48 @@
+﻿@model WordHeaven_Web.Models.Users.HelpViewModel
+@{
+    ViewData["Title"] = "WordHeaven";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<Center>
+    <div class="row">
+        <h2 style="color:goldenrod;">Report New Issue or Get Information Request</h2>
+        <form method="post">
+            <div asp-validation-summary="ModelOnly"></div>
+            <br />
+            <div class="form-group">
+                <label asp-for="Subject" style="color:lightseagreen;">Subject</label>
+                <input asp-for="Subject" class="form-control" style="text-align:center;width:500px" />
+                <span asp-validation-for="Subject" class="text-danger"></span>
+                <br />
+                <label asp-for="ProblemDescription" style="color:lightseagreen;">Problem Description</label>
+                <input asp-for="ProblemDescription" class="form-control" style="text-align:center;width:500px" />
+                <span asp-validation-for="ProblemDescription" class="text-danger"></span>
+                <br />
+                <label asp-for="Severity" class="control-label"></label>
+                <select asp-for="Severity" class="form-control" style="text-align:center;width:500px">
+                    <option selected disabled>(Select the Severity...)</option>
+                    <option value="Critical">Critical</option>
+                    <option value="High">High</option>
+                    <option value="Medium">Medium</option>
+                    <option value="Low">Low</option>
+                </select>
+                <span asp-validation-for="Severity" class="text-danger"></span>
+            </div>
+            <br />
+            <div class="text-success">
+                <p style="color:dodgerblue">@ViewBag.Message </p>
+            </div>
+            <br />
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary" style="background-color:darkcyan;width:240px;height:35px;font:bold;border-color:darkcyan; color:whitesmoke">
+                    <i class="fa fa-save" style="color:whitesmoke;"></i>  Send Ticket
+                </button>
+                <a asp-controller="Account" asp-action="AccountManagement" class="btn btn-primary" style="background-color: darkorange;width:240px;height:35px;border-color:darkorange;color: antiquewhite">
+                    <i class="fa fa-arrow-left" style="color:antiquewhite;"></i>  Back
+                </a>
+            </div>
+        </form>
+    </div>
+</Center>
+

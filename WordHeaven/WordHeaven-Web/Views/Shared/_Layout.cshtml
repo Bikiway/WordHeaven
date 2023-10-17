@@ -25,10 +25,13 @@
             var imgSrc = String.Format("data:image/gif;base64,{0}", base64);
             ViewData["Image"] = imgSrc;
         }
-
     }
     catch (Exception ex)
     {
+
+        var base64 = Convert.ToBase64String(user.PictureSource);
+        var imgSrc = String.Format("data:image/gif;base64,{0}", base64);
+        ViewData["Image"] = imgSrc;
     }
 }
 

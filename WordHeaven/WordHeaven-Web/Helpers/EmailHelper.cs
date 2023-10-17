@@ -55,6 +55,52 @@ namespace WordHeaven_Web.Helpers
             };
         }
 
+        public Responses SendEmailWithCC(string email, string cc, string subject, string message)
+        {
+            var nameFrom = _configuration["Email:NameFrom"];
+            var from = _configuration["Email:From"];
+            var smtp = _configuration["Email:Smtp"];
+            var port = _configuration["Email:Port"];
+            var password = _configuration["Email:Password"];
+
+            var _email = new MimeMessage();
+            _email.From.Add(new MailboxAddress(nameFrom, from));
+            _email.To.Add(new MailboxAddress(email, email));
+
+            // Add CC recipient
+            if (!string.IsNullOrEmpty(cc))
+            {
+                _email.Cc.Add(new MailboxAddress(cc, cc));
+            }
+
+            _email.Subject = subject;
+            _email.Body = new TextPart(MimeKit.Text.TextFormat.Html) { Text = message };
+
+            try
+            {
+                using (var client = new MailKit.Net.Smtp.SmtpClient())
+                {
+                    client.Connect(smtp, int.Parse(port), false);
+                    client.Authenticate(from, password);
+                    client.Send(_email);
+                    client.Disconnect(true);
+                }
+
+                return new Responses
+                {
+                    IsSuccess = true,
+                };
+            }
+            catch (Exception ex)
+            {
+                return new Responses
+                {
+                    IsSuccess = false,
+                    Message = ex.ToString()
+                };
+            }
+        }
+
         public async Task SendEmailWithAttachment(string email, string subject, string message, MemoryStream attachment)
         {
             var nameFrom = _configuration["Email:NameFrom"];
