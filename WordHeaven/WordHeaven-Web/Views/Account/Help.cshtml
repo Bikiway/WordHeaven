@@ -6,16 +6,16 @@
 
 <Center>
     <div class="row">
-        <h2 style="color:goldenrod;">Report New Issue or Get Information Request</h2>
+        <h2 style="color:cadetblue;">Report New Issue or Get Information Request</h2>
         <form method="post">
             <div asp-validation-summary="ModelOnly"></div>
             <br />
             <div class="form-group">
-                <label asp-for="Subject" style="color:lightseagreen;">Subject</label>
+                <label asp-for="Subject" style="color:darkcyan;">Subject</label>
                 <input asp-for="Subject" class="form-control" style="text-align:center;width:500px" />
                 <span asp-validation-for="Subject" class="text-danger"></span>
                 <br />
-                <label asp-for="ProblemDescription" style="color:lightseagreen;">Problem Description</label>
+                <label asp-for="ProblemDescription" style="color:darkcyan;">Problem Description</label>
                 <input asp-for="ProblemDescription" class="form-control" style="text-align:center;width:500px" />
                 <span asp-validation-for="ProblemDescription" class="text-danger"></span>
                 <br />
@@ -35,11 +35,11 @@
             </div>
             <br />
             <div class="form-group">
-                <button type="submit" class="btn btn-primary" style="background-color:darkcyan;width:240px;height:35px;font:bold;border-color:darkcyan; color:whitesmoke">
-                    <i class="fa fa-save" style="color:whitesmoke;"></i>  Send Ticket
+                <button type="submit" class="btn btn-primary" style="background-color:cadetblue;width:240px;height:35px;font:bold;border-color:cadetblue; color:floralwhite">
+                    <i class="fa fa-save" style="color:floralwhite;"></i>  Send Ticket
                 </button>
-                <a asp-controller="Account" asp-action="AccountManagement" class="btn btn-primary" style="background-color: darkorange;width:240px;height:35px;border-color:darkorange;color: antiquewhite">
-                    <i class="fa fa-arrow-left" style="color:antiquewhite;"></i>  Back
+                <a asp-controller="Account" asp-action="AccountManagement" class="btn btn-primary" style="background-color: darkorange;width:240px;height:35px;border-color:darkorange;color: floralwhite">
+                    <i class="fa fa-arrow-left" style="color:floralwhite;"></i>  Back
                 </a>
             </div>
         </form>

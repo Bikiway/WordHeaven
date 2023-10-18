@@ -83,4 +83,9 @@
 		<PackageReference Include="MailKit" Version="4.0.0" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <Folder Include="wwwroot\image\book\" />
+	  <Folder Include="wwwroot\image\employees\" />
+	</ItemGroup>
+
 </Project>

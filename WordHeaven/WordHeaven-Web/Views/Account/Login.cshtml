@@ -7,18 +7,18 @@
     ViewData["Title"] = "WordHeaven";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-<Center><h2 style="color:brown;">Login</h2></Center>
+<Center><h2 style="color:cadetblue;">Login</h2></Center>
 <div class="row">
     <div class="col-md-4 offset-md-4">
         <form method="post">
             <div class="form-group">
-                <label asp-for="UserName" style="color:goldenrod;">UserName</label>
+                <label asp-for="UserName" style="color:darkcyan;">UserName</label>
                 <input asp-for="UserName" class="form-control" />
                 <span asp-validation-for="UserName" class="text-warning"></span>
             </div>
             <br />
             <div class="form-group">
-                <label asp-for="Password" style="color:goldenrod;">Password</label>
+                <label asp-for="Password" style="color:darkcyan;">Password</label>
                 <input asp-for="Password" type="password" class="form-control" />
                 <span asp-validation-for="Password" class="text-warning"></span>
             </div>
@@ -27,7 +27,7 @@
             <div class="form-group">
                 <div class="form-check">
                     <input asp-for="RememberMe" type="checkbox" class="form-check-input" style="color:white;" />
-                    <label asp-for="RememberMe" class="form-check-label" style="color:goldenrod;">Remember Me?</label>
+                    <label asp-for="RememberMe" class="form-check-label" style="color:darkcyan;">Remember Me?</label>
                 </div>
                 <span asp-validation-for="RememberMe" class="text-warning"></span>
             </div>
@@ -36,15 +36,15 @@
             <br />
             <div class="form-group">
                 <center>
-                    <button type="submit" class="btn btn-primary" style="background-color:rosybrown;width:350px;height:40px;border-color:rosybrown;font-size:large;">
+                    <button type="submit" class="btn btn-primary" style="background-color:cadetblue;width:350px;height:40px;border-color:cadetblue;font-size:large;">
                         <i class="fa fa-sign-in"></i> Login
                     </button>
                 </center>
                 <br />
                 <br />
-                <span style="color:lightcoral;">Don't have an account yet? </span><a asp-area="" asp-controller="Account" asp-action="RegisterUser" style="color:floralwhite;"> Register now</a>
+                <span style="color:darkcyan;">Don't have an account yet? </span><a asp-area="" asp-controller="Account" asp-action="RegisterUser" style="color:burlywood;"> Register now</a>
                 <br />
-                <span style="color:lightcoral;">Forgot </span><a asp-area="" asp-controller="Account" asp-action="RecoverPassword" style="color:floralwhite;"> your password?</a>
+                <span style="color:darkcyan;">Forgot </span><a asp-area="" asp-controller="Account" asp-action="RecoverPassword" style="color:burlywood;"> your password?</a>
             </div>
         </form>
     </div>

@@ -5,12 +5,12 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<center><h2 style="color: dimgray">Edit Employee @Html.DisplayFor(model => model.EmployeeFullName) Data</h2></center>
+<center><h2 style="color: cadetblue">Edit Employee @Html.DisplayFor(model => model.EmployeeFullName) Data</h2></center>
 <center><p style="color:chartreuse">@ViewBag.Message </p></center>
 <br />
 <form asp-action="Edit">
     <div class="text-center">
-        <div class="row" style="color:indianred;">
+        <div class="row" style="color:black;">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="col-sm"></div>
             <div class="col-sm">
@@ -30,10 +30,10 @@
     <br />
     <center>
         <div class="form-group">
-            <button type="submit" value="Edit" class="btn btn-primary" style="background-color:mistyrose;width:250px;height:35px;font:bold;border-color: lightpink; color:pink">
+            <button type="submit" value="Edit" class="btn btn-primary" style="background-color:cadetblue;width:250px;height:35px;font:bold;border-color:cadetblue;color:floralwhite">
                 <i class="fas fa-save" style="color:white;"></i> Save
             </button>
-            <a asp-action="Index" class="btn btn-success" style="background-color:papayawhip;width:250px;height:35px;border-color:pink;color:hotpink">
+            <a asp-action="Index" class="btn btn-success" style="background-color:darkorange;width:250px;height:35px;border-color:darkorange;color:floralwhite">
                 <i class="fa fa-chevron-left" style="color:white;"></i> Back to List
             </a>
         </div>

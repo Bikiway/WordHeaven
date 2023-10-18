@@ -6,32 +6,32 @@
 
 <Center>
     <div class="row">
-        <h2 style="color:goldenrod;">Register New User</h2>
+        <h2 style="color:cadetblue;">Register New User</h2>
         <form method="post">
             <div asp-validation-summary="ModelOnly"></div>
             <br />
             <div class="form-group">
-                <label asp-for="FirstName" style="color:lightseagreen;">What´s your First Name?</label>
+                <label asp-for="FirstName" style="color:darkcyan;">What´s your First Name?</label>
                 <input asp-for="FirstName" class="form-control" style="text-align:center;width:500px" />
                 <span asp-validation-for="FirstName" class="text-danger"></span>
                 <br />
-                <label asp-for="LastName" style="color:lightseagreen;">What´s your Last Name?</label>
+                <label asp-for="LastName" style="color:darkcyan;">What´s your Last Name?</label>
                 <input asp-for="LastName" class="form-control" style="text-align:center;width:500px" />
                 <span asp-validation-for="LastName" class="text-danger"></span>
                 <br />
-                <label asp-for="Username" style="color:lightseagreen;">What´s your e-mail account?</label>
+                <label asp-for="Username" style="color:darkcyan;">What´s your e-mail account?</label>
                 <input asp-for="Username" class="form-control" style="text-align:center;width:500px" />
                 <span asp-validation-for="Username" class="text-danger"></span>
                 <br />
-                <label asp-for="Address" style="color:lightseagreen;">What´s address?</label>
+                <label asp-for="Address" style="color:darkcyan;">What´s address?</label>
                 <input asp-for="Address" class="form-control" style="text-align:center;width:500px" />
                 <span asp-validation-for="Address" class="text-danger"></span>
                 <br />
-                <label asp-for="PostalCode" style="color:lightseagreen;">What´s your PostalCode?</label>
+                <label asp-for="PostalCode" style="color:darkcyan;">What´s your PostalCode?</label>
                 <input asp-for="PostalCode" class="form-control" style="text-align:center;width:500px" />
                 <span asp-validation-for="PostalCode" class="text-danger"></span>
                 <br />
-                <label asp-for="Location" style="color:lightseagreen;">What´s your Location?</label>
+                <label asp-for="Location" style="color:darkcyan;">What´s your Location?</label>
                 <input asp-for="Location" class="form-control" style="text-align:center;width:500px" />
                 <span asp-validation-for="Location" class="text-danger"></span>
             </div>
@@ -41,11 +41,11 @@
             </div>
             <br />
             <div class="form-group">
-                <button type="submit" class="btn btn-primary" style="background-color:darkcyan;width:240px;height:35px;font:bold;border-color:darkcyan; color:whitesmoke">
-                    <i class="fa fa-save" style="color:whitesmoke;"></i>  Register
+                <button type="submit" class="btn btn-primary" style="background-color:cadetblue;width:240px;height:35px;font:bold;border-color:cadetblue; color: floralwhite">
+                    <i class="fa fa-save" style="color:floralwhite;"></i>  Register
                 </button>
-                <a asp-controller="Account" asp-action="Login" class="btn btn-primary" style="background-color: darkorange;width:240px;height:35px;border-color:darkorange;color: antiquewhite">
-                    <i class="fa fa-arrow-left" style="color:antiquewhite;"></i>  Back to Login
+                <a asp-controller="Account" asp-action="Login" class="btn btn-primary" style="background-color: darkorange;width:240px;height:35px;border-color:darkorange;color: floralwhite">
+                    <i class="fa fa-arrow-left" style="color:floralwhite;"></i>  Back to Login
                 </a>
             </div>
         </form>

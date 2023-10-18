@@ -6,24 +6,24 @@
 
 <Center>
     <div class="row">
-        <h2 style="color:chocolate;">Change Personal Information</h2>
+        <h2 style="color:cadetblue;">Change Personal Information</h2>
         <form method="post" enctype="multipart/form-data">
             <div asp-validation-summary="ModelOnly"></div>
             <br />
             <div class="form-group">
-                <label asp-for="FirstName" style="color:lightseagreen;">Introduce your First Name</label>
+                <label asp-for="FirstName" style="color:darkcyan;">Introduce your First Name</label>
                 <input asp-for="FirstName" class="form-control" style="width:391px;text-align:left" />
                 <span asp-validation-for="FirstName" class="text-warning"></span>
                 <br />
-                <label asp-for="LastName" style="color:lightseagreen;">Introduce your Last Name</label>
+                <label asp-for="LastName" style="color:darkcyan;">Introduce your Last Name</label>
                 <input asp-for="LastName" class="form-control" style="width:391px;text-align:left" />
                 <span asp-validation-for="LastName" class="text-warning"></span>
                 <br />
-                <label asp-for="Email" style="color:lightseagreen;">Introduce your Email</label>
+                <label asp-for="Email" style="color:darkcyan;">Introduce your Email</label>
                 <input asp-for="Email" class="form-control" style="width:391px;text-align:left" />
                 <span asp-validation-for="Email" class="text-warning"></span>
                 <br />
-                <label asp-for="PictureUser" style="color:lightseagreen;">Introduce your new Profile Image</label>
+                <label asp-for="PictureUser" style="color:darkcyan;">Introduce your new Profile Image</label>
                 <input asp-for="PictureUser" class="form-control" style="width:391px;text-align:left" type="file" />
                 <span asp-validation-for="PictureUser" class="text-warning"></span>
             </div>
@@ -33,11 +33,11 @@
             </div>
             <br />
             <div class="form-group">
-                <button type="submit" class="btn btn-primary" style="background-color:cadetblue;width:250px;height:35px;font:bold;border-color:cadetblue; color:whitesmoke">
-                    <i class="fa fa-save" style="color:whitesmoke;"></i>  Save
+                <button type="submit" class="btn btn-primary" style="background-color:cadetblue;width:250px;height:35px;font:bold;border-color:cadetblue; color:floralwhite">
+                    <i class="fa fa-save" style="color:floralwhite;"></i>  Save
                 </button>
-                <a asp-controller="Account" asp-action="AccountManagement" class="btn btn-primary" style="background-color: cornflowerblue;width:250px;height:35px;border-color:cornflowerblue; color:whitesmoke">
-                    <i class="fa fa-arrow-left" style="color:whitesmoke;"></i>  Cancel
+                <a asp-controller="Account" asp-action="AccountManagement" class="btn btn-primary" style="background-color: darkorange;width:250px;height:35px;border-color:darkorange; color:floralwhite">
+                    <i class="fa fa-arrow-left" style="color:floralwhite;"></i>  Cancel
                 </a>
             </div>
         </form>
