@@ -52,5 +52,10 @@ namespace WordHeaven_Web.Data.Books
 
             return list;
         }
+
+        public IQueryable GetBooks()
+        {
+            return _context.Books.Include(s => s.BookCover);
+        }
     }
 }
