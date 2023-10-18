@@ -23,7 +23,7 @@ namespace WordHeaven_Web.Data.Stores
         {
             var list = _context.Stores.Select(p => new SelectListItem
             {
-                Text = p.FullLocation,
+                Text = p.Name,
                 Value = p.Id.ToString()
             }).ToList();
 

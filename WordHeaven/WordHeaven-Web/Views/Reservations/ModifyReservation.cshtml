@@ -1,4 +1,4 @@
-﻿@model WordHeaven_Web.Models.Reservation.AlterStatusReservationViewModel
+﻿@model List<WordHeaven_Web.Models.Reservation.AlterStatusReservationViewModel>
 @{
     ViewData["Title"] = "ModifyReservation";
 }
@@ -12,30 +12,34 @@
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
         
         <div class="text-bg-info">
-            @Html.DisplayFor(Model => Model.ClientUserName)
+            @Html.DisplayFor(Model => Model.FirstOrDefault().ClientUserName)
+        </div>
+
+        <div class="text-bg-info">
+            @Html.DisplayFor(Model => Model.FirstOrDefault().StoreName)
         </div>
 
         <div class="form-group form-check">
             <label class="form-check-label">
-                <input class="form-check-input" asp-for="BookAsReturned" /> @Html.DisplayNameFor(model => model.BookAsReturned)
+                <input class="form-check-input" asp-for="@Model.FirstOrDefault().BookAsReturned" /> @Html.DisplayNameFor(model => model.FirstOrDefault().BookAsReturned)
             </label>
         </div>
 
         <div class="form-group form-check">
             <label class="form-check-label">
-                <input class="form-check-input" asp-for="DidntReturnTheBook" /> @Html.DisplayNameFor(model => model.DidntReturnTheBook)
+                <input class="form-check-input" asp-for="@Model.FirstOrDefault().DidntReturnTheBook" /> @Html.DisplayNameFor(model => model.FirstOrDefault().DidntReturnTheBook)
             </label>
         </div>
 
         <div class="form-group form-check">
             <label class="form-check-label">
-                <input class="form-check-input" asp-for="RenewTime" /> @Html.DisplayNameFor(model => model.RenewTime)
+                <input class="form-check-input" asp-for="@Model.FirstOrDefault().RenewTime" /> @Html.DisplayNameFor(model => model.FirstOrDefault().RenewTime)
             </label>
         </div>
 
         <div class="form-group form-check">
             <label class="form-check-label">
-                <input class="form-check-input" asp-for="ClientPayedTaxes" /> @Html.DisplayNameFor(model => model.ClientPayedTaxes)
+                <input class="form-check-input" asp-for="@Model.FirstOrDefault().ClientPayedTaxes" /> @Html.DisplayNameFor(model => model.FirstOrDefault().ClientPayedTaxes)
             </label>
         </div>
         <br />

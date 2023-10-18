@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using WordHeaven_Web.Data.Books;
@@ -54,20 +55,8 @@ namespace WordHeaven_Web.Controllers
 
                 var user = await _userHelper.GetUserByEmailAsync(this.User.Identity.Name);
 
-                if (user == null)
+                if (user != null)
                 {
-
-                    user = new User
-                    {
-                        FirstName = model.ClientFirstName,
-                        LastName = model.ClientLastName,
-                        Email = model.UserName,
-                        UserName = model.UserName,
-                        EmailConfirmed = true,
-                        Address = "Ruas",
-                        PhoneNumber = "9999",
-                    };
-
                     string myToken = await _userHelper.GenerateConfirmEmailTokenAsync(user);
                     string tokenLink = Url.Action("ConfirmEmail", "Reservations", new
                     {
@@ -134,22 +123,18 @@ namespace WordHeaven_Web.Controllers
         }
 
 
-        public async Task<IActionResult> MakeReservation(AddReservationViewModel model, int Id)
+        public IActionResult MakeReservation()
         {
-            var bookId = model.BookId;
-            var image = await _reservationRepository.GetBookCover(bookId);
-
             var arvm = new AddReservationViewModel
             {
                 Stores = _storeRepository.GetComboStoresNames(),
                 Books = _bookRepository.GetComboBooks(),
-                BookCoverId = image,
-                ClientFirstName = model.ClientFirstName,
-                ClientLastName = model.ClientLastName,
-                UserName = model.UserName,
-                BookReturned = model.BookReturned,
-                LoanedBook = model.LoanedBook,
-                IsBooked = model.IsBooked,
+                ClientFirstName = "",
+                ClientLastName = "",
+                UserName = "",
+                BookReturned = DateTime.MinValue,
+                LoanedBook = DateTime.MinValue,
+                IsBooked = true,
             };
 
             return View(arvm);
@@ -222,10 +207,12 @@ namespace WordHeaven_Web.Controllers
             if (reservation == null)
             { return NotFound(); }
 
+            var stores = _reservationRepository.GetStoresFromReservation(Id.Value);
+
             var model = new AlterStatusReservationViewModel
             {
                 Id = reservation.Id,
-                StoreName = reservation.StoreName.Name,
+                StoreName = stores.Result,
                 ClientUserName = reservation.UserName,
                 BookAsReturned = reservation.BookReturnedByClient,
                 DidntReturnTheBook = reservation.ClientDidntReturnTheBook,

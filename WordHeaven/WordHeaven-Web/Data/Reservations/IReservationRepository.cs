@@ -42,5 +42,7 @@ namespace WordHeaven_Web.Data.Reservations
         Task<bool> IsBookReturned (int Id);
 
         Task<bool> ClientReturnedTheBook (int Id);
+
+        Task<string> GetStoresFromReservation(int Id);
     }
 }

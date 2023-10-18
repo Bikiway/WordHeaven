@@ -22,7 +22,7 @@ namespace WordHeaven_Web.Data.Entity
 
 
         [Display(Name = "Book")]
-        public string BookName { get; set; }
+        public Book BookName { get; set; }
 
 
         [Display(Name = "Cover")]

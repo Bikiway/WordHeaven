@@ -1,9 +1,9 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
 using WordHeaven_Web.Data.Entity;
-using WordHeaven_Web.Data.Stores;
 using WordHeaven_Web.Helpers;
 using WordHeaven_Web.Models.Reservation;
 
@@ -13,49 +13,49 @@ namespace WordHeaven_Web.Data.Reservations
     {
         private readonly DataContext _context;
         private readonly IUserHelper _userHelper;
-        public ReservationRepository(DataContext context, IUserHelper userHelper) : base(context)
+        private readonly UserManager<User> _userManager;
+        public ReservationRepository(DataContext context, IUserHelper userHelper, UserManager<User> userManager) : base(context)
         {
             _context = context;
             _userHelper = userHelper;
+            _userManager = userManager;
         }
 
         public async Task AddItemToReservationAsync(AddReservationViewModel model, string userName)
         {
-            var user = await _userHelper.GetUserByEmailAsync(model.UserName);
-            if (user == null) { return; }
-
-            var books = await _context.Books.FindAsync(model.BookId);
-            var store = await _context.Stores.FindAsync(model.storeId);
-            byte imageId = Convert.ToByte(books.BookCover);
-            byte[] image = await GetBookCover(Convert.ToSByte(imageId));
-
-            if (books == null && store == null)
-            { return; }
-
-            var reserveDetailTemp = await _context.ReservationsDetailTemp
-                .Where(rdt => rdt.user == user && rdt.book == books)
-                .Where(rdt => rdt.user == user && rdt.StoreName == store)
-                .FirstOrDefaultAsync();
-
-            if (reserveDetailTemp == null)
+            var user = await _userHelper.GetUserByEmailAsync(userName);
+            if (user == null)
             {
-                reserveDetailTemp = new ReservationDetailsTemp
+                var books = await _context.Books.FindAsync(model.BookId);
+                var store = await _context.Stores.FindAsync(model.storeId);
+
+                if (books == null && store == null)
+                { return; }
+
+                var reserveDetailTemp = await _context.ReservationsDetailTemp
+                    .Where(rdt => rdt.book == books)
+                    .Where(rdt => rdt.StoreName == store)
+                    .FirstOrDefaultAsync();
+
+                if (reserveDetailTemp == null)
                 {
-                    StoreName = store,
-                    ClientFirstName = model.ClientFirstName,
-                    ClientLastName = model.ClientLastName,
-                    book = books,
-                    BookCover = image,
-                    BookReturned = model.BookReturned,
-                    LoanedBook = model.LoanedBook,
-                    IsBooked = model.IsBooked,
-                    Request = model.Request,
-                    UserName = model.UserName,
-                    user = user
-                };
-                _context.ReservationsDetailTemp.Add(reserveDetailTemp);
+                    reserveDetailTemp = new ReservationDetailsTemp
+                    {
+                        StoreName = store,
+                        ClientFirstName = model.ClientFirstName,
+                        ClientLastName = model.ClientLastName,
+                        book = books,
+                        BookCover = books.BookCover,
+                        BookReturned = model.BookReturned,
+                        LoanedBook = model.LoanedBook,
+                        IsBooked = model.IsBooked,
+                        Request = model.Request,
+                        UserName = model.UserName,
+                    };
+                    _context.ReservationsDetailTemp.Add(reserveDetailTemp);
+                }
+                await _context.SaveChangesAsync();
             }
-            await _context.SaveChangesAsync();
         }
 
         public async Task<bool> ClientDidntReturnBook(int Id)
@@ -86,8 +86,6 @@ namespace WordHeaven_Web.Data.Reservations
             var reserveTemps = await _context.ReservationsDetailTemp
                 .Include(r => r.StoreName)
                 .Include(r => r.book)
-                .Include(r => r.BookCover)
-                .Where(r => r.user == user)
                 .ToListAsync();
 
             if (reserveTemps == null || reserveTemps.Count == 0)
@@ -122,7 +120,7 @@ namespace WordHeaven_Web.Data.Reservations
                 StoreName = detailsInfo.FirstOrDefault()?.StoreName,
                 ClientFirstName = detailsInfo.FirstOrDefault().ClientFirstName,
                 ClientLastName = detailsInfo.FirstOrDefault()?.ClientLastName,
-                BookName = detailsInfo.FirstOrDefault()?.bookName.Title,
+                BookName = detailsInfo.FirstOrDefault().bookName,
                 BookCover = (await image)[0],
                 IsBooked = isBooked.Result,
                 BookReturned = detailsInfo.FirstOrDefault().BookReturned,
@@ -130,11 +128,11 @@ namespace WordHeaven_Web.Data.Reservations
                 RenewBookLoan = renewed.Result,
                 BookReturnedByClient = bookReturned.Result,
                 PayTaxesLoan = reservationOutOfTime.Result,
-                LoanTimeLimit = TimeLimit.Result.Date,
+                LoanTimeLimit = await TimeLimit,
                 PayedTaxesLoan = Payed.Result,
                 ClientDidntReturnTheBook = ClientDidntReturned.Result,
                 user = user,
-                UserName = detailsInfo.FirstOrDefault()?.UserName,
+                UserName = detailsInfo.FirstOrDefault().UserName,
                 Items = detailsInfo,
             };
 
@@ -199,12 +197,17 @@ namespace WordHeaven_Web.Data.Reservations
         public async Task<IQueryable<ReservationDetailsTemp>> GetReservationTempAsync(string userName)
         {
             var user = await _userHelper.GetUserByEmailAsync(userName);
-            if (user == null) { return null; }
+            if (user == null) 
+            {
+                return _context.ReservationsDetailTemp
+               .Include(o => o.StoreName)
+               .Include(o => o.book)
+               .OrderBy(o => o.Id);
+            }
 
             return _context.ReservationsDetailTemp
                 .Include(o => o.StoreName)
                 .Include(o => o.book)
-                .Where(u => u.user == user)
                 .OrderBy(o => o.Id);
         }
 
@@ -245,12 +248,16 @@ namespace WordHeaven_Web.Data.Reservations
                 .Select(i => i.BookReturned)
                 .FirstOrDefaultAsync();
 
-            return br.AddDays(-3);
+            // Check if br is at least 3 days in the future
+            if (br >= DateTime.Now.AddDays(3))
+            {
+                return br.AddDays(-3);
+            }
+            else
+            {
+                return br;
+            }
         }
-
-
-
-
 
         public async Task ModifyStatusReservation(AlterStatusReservationViewModel model)
         {
@@ -346,6 +353,16 @@ namespace WordHeaven_Web.Data.Reservations
                 .FirstOrDefaultAsync();
 
             return taxPay;
+        }
+
+        public async Task<string> GetStoresFromReservation(int Id)
+        {
+            var stores = await _context.Reservations
+                .Where(s => s.Id == Id)
+                .Select(s => s.StoreName.FullLocation)
+                .FirstOrDefaultAsync();
+
+            return stores;
         }
     }
 }
