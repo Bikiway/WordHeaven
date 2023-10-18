@@ -13,5 +13,7 @@ namespace WordHeaven_Web.Data.Books
         IEnumerable<SelectListItem> GetComboBooks();
 
         IEnumerable<SelectListItem> GetComboCoverBooks();
+
+        IQueryable GetBooks();
     }
 }

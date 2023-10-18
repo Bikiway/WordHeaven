@@ -5,6 +5,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 using WordHeaven_Web.Data;
 using WordHeaven_Web.Data.Books;
 using WordHeaven_Web.Data.Employees;
@@ -38,6 +40,19 @@ namespace WordHeaven_Web
                 cfg.Password.RequiredLength = 9;
             }).AddDefaultTokenProviders()
               .AddEntityFrameworkStores<DataContext>();
+
+            //services.AddAuthentication()
+            //    .AddCookie()
+            //    .AddJwtBearer(cfg =>
+            //    {
+            //        cfg.TokenValidationParameters = new TokenValidationParameters
+            //        {
+            //            ValidIssuer = this.Configuration["Tokens:Issuer"],
+            //            ValidAudience = this.Configuration["Tokens:Audience"],
+            //            IssuerSigningKey = new SymmetricSecurityKey(
+            //                Encoding.UTF8.GetBytes(this.Configuration["Tokens:Key"]))
+            //        };
+            //    });
 
             services.AddDbContext<DataContext>(cfg => cfg.UseSqlServer(this.Configuration.GetConnectionString("DefaultConnection")));
 
