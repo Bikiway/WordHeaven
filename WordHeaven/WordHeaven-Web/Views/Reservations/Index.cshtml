@@ -16,7 +16,7 @@
 @if (this.User.IsInRole("Admin"))
 {
     <p>
-        <a asp-action="" class="btn btn-light" style="font-size: 20px; color: midnightblue">Report</a>
+        <a asp-action="GetStatistics" class="btn btn-light" style="font-size: 20px; color: midnightblue">Report</a>
     </p>
 }
 <br />
@@ -72,7 +72,7 @@
                     </td>
 
                     <td>
-                        @Html.DisplayFor(modelItem => item.BookName)
+                        @Html.DisplayFor(modelItem => item.BookName.Title)
                     </td>
                     <td>
                         @if (item.BookCover > 0)
@@ -91,7 +91,7 @@
                     </td>
 
                     <td>
-                        @Html.DisplayFor(modelItem => item.StoreName)
+                        @Html.DisplayFor(modelItem => item.StoreName.Name)
                     </td>
 
                     <td>
@@ -99,10 +99,23 @@
                     </td>
 
                     <td>
-                        @if (item.LoanTimeLimit == item.BookReturned)
+                        @if (item.LoanTimeLimit < item.BookReturned)
                         {
                             <input type="hidden" asp-for="@item.Id">
+                            <a id="sendWarningEmailLink" asp-action="SendWarningEmail" asp-route-id="@item.Id" style="display: none;"></a>
                             <a asp-action="ModifyReservation" asp-route-id="@item.Id" class="btn btn-warning status-button" style="background-color: whitesmoke; color: grey;">Check Status</a>
+
+                            <script>
+                                $(document).ready(function () {
+                                    var sendWarningEmailLink = $("#sendWarningEmailLink");
+                                    sendWarningEmailLink.trigger('click');
+                                });
+                            </script>
+                        }
+
+                        else if(item.BookReturnedByClient == true || item.PayedTaxesLoan == true)
+                        {
+                            <a href="#" class="btn btn-success">Done</a>
                         }
 
                         else

@@ -9,6 +9,18 @@
     {
       "library": "bootstrap@5.3.1",
       "destination": "wwwroot/vendor/bootstrap/"
+    },
+    {
+      "library": "OwlCarousel2@2.3.4",
+      "destination": "wwwroot/assets/OwlCarousel2/"
+    },
+    {
+      "library": "responsiveCarousel@1.2.2",
+      "destination": "wwwroot/assets/responsiveCarousel/"
+    },
+    {
+      "library": "responsive-elements@1.0.2",
+      "destination": "wwwroot/assets/responsive-elements/"
     }
   ]
 }

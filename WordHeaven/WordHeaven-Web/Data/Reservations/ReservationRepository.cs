@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
@@ -33,8 +34,8 @@ namespace WordHeaven_Web.Data.Reservations
                 { return; }
 
                 var reserveDetailTemp = await _context.ReservationsDetailTemp
-                    .Where(rdt => rdt.book == books)
-                    .Where(rdt => rdt.StoreName == store)
+                    .Where(rdt => rdt.book.Title == books.Title)
+                    .Where(rdt => rdt.StoreName.Name == store.Name)
                     .FirstOrDefaultAsync();
 
                 if (reserveDetailTemp == null)
@@ -225,14 +226,14 @@ namespace WordHeaven_Web.Data.Reservations
         {
             var book = await _context.Reservations
                 .Where(s => s.Id == Id)
-                .Select(s => s.BookReturnedByClient)
+                .Select(s => s.BookReturnedByClient == false)
                 .FirstOrDefaultAsync();
 
-            if (book)
+            if (book == true)
             {
                 var returned = await _context.Reservations
                     .Where(s => s.Id == Id)
-                    .Select(s => s.IsBooked)
+                    .Select(s => s.IsBooked == true)
                     .FirstOrDefaultAsync();
 
                 return returned;
@@ -248,10 +249,14 @@ namespace WordHeaven_Web.Data.Reservations
                 .Select(i => i.BookReturned)
                 .FirstOrDefaultAsync();
 
+            DateTime dt = DateTime.MinValue;
+            var day = DateTime.Now;
+            day = day.AddDays(-3);
+
             // Check if br is at least 3 days in the future
-            if (br >= DateTime.Now.AddDays(3))
+            if (br <= DateTime.UtcNow)
             {
-                return br.AddDays(-3);
+                return day;
             }
             else
             {

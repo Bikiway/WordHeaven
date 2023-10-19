@@ -14,23 +14,11 @@
         <form asp-action="MakeReservation">
 
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-@*            <div class="form-group">
-                    @if (Model.BookId > 0 || Model.BookId == 0)
-                    {
-                        @if (Model.BookCoverId.Length > 0 || Model.BookCoverId.Length == 0)
-                        {
-                            var base64 = Convert.ToBase64String(Model.BookCoverId);
-                            var imgSrc = String.Format("data:image/gif;base64,{0}", base64);
-                            ViewData["Image"] = imgSrc;
-                            <img src="@ViewData["Image"]" alt="" style="border-radius: 23px;">
-                        }
-                    }
-            </div>*@
                 <br />
-            <div class="form-group">
-                <label asp-for="BookId" class="control-label">Book</label>
-                <select asp-for="BookId" asp-items="Model.Books" class="form-control"></select>
-                <span asp-validation-for="BookId" class="text-danger"></span>
+            <div class="form-group">             
+                        <label asp-for="BookId" class="control-label">Book</label>
+                        <select asp-for="BookId" asp-items="Model.Books" class="form-control"></select>
+                        <span asp-validation-for="BookId" class="text-danger"></span>
             </div>
            <br />
            
