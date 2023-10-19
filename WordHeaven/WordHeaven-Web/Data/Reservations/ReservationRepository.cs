@@ -369,5 +369,10 @@ namespace WordHeaven_Web.Data.Reservations
 
             return stores;
         }
+
+        public async Task<Reservation> GetReservationId(int Id)
+        {
+            return await _context.Reservations.FindAsync(Id);
+        }
     }
 }

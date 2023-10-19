@@ -225,6 +225,7 @@ namespace WordHeaven_Web.Controllers
                 emailSent = limit,
             };
 
+            await SendWarningEmail(reserve.Id);
             return View(model);
         }
 
@@ -280,9 +281,9 @@ namespace WordHeaven_Web.Controllers
         }
 
 
-        public async Task SendWarningEmail(int Id)
+        public async Task<IActionResult> SendWarningEmail(int Id)
         {
-            var reservationId = await _reservationRepository.GetByIdAsync(Id);
+            var reservationId = await _reservationRepository.GetReservationId(Id);
             var limit = await _reservationRepository.GetReminderDate(reservationId.Id);
 
             if (limit.Date != null)
@@ -317,13 +318,13 @@ namespace WordHeaven_Web.Controllers
                     reservationId.WarningEmailSent = true;
                 }
             }
-            reservationId.WarningEmailSent = false;
+            return View();
         }
 
 
-        public async Task SendResponsabilizationEmail(AlterStatusReservationViewModel model)
+        public async Task<IActionResult> SendResponsabilizationEmail(int Id)
         {
-            var reservationId = await _reservationRepository.GetByIdAsync(model.Id);
+            var reservationId = await _reservationRepository.GetReservationId(Id);
 
             var limit = await _reservationRepository.ClientDidntReturnBook(reservationId.Id);
             var taxes = await _reservationRepository.TaxesPayedByClient(reservationId.Id);
@@ -360,7 +361,7 @@ namespace WordHeaven_Web.Controllers
                     reservationId.WarningEmailSent = true;
                 }
             }
-            reservationId.WarningEmailSent = false;
+            return View();
         }
 
         public async Task<IActionResult> ResponsabilizationForClient(string userId, string token, int Id)
@@ -370,7 +371,7 @@ namespace WordHeaven_Web.Controllers
                 return NotFound();
             }
 
-            var reserveId = await _reservationRepository.GetByIdAsync(Id);
+            var reserveId = await _reservationRepository.GetReservationId(Id);
             var user = await _userHelper.GetUserByIdAsync(userId);
 
             if (user == null || reserveId == null)
@@ -390,9 +391,9 @@ namespace WordHeaven_Web.Controllers
             return View();
         }
 
-        public async Task SendRenewalEmail(int Id)
+        public async Task<IActionResult> SendRenewalEmail(int Id)
         {
-            var reservationId = await _reservationRepository.GetByIdAsync(Id);
+            var reservationId = await _reservationRepository.GetReservationId(Id);
             var limit = await _reservationRepository.RenewReservationLoan(reservationId.Id);
 
             if (limit == true)
@@ -427,7 +428,7 @@ namespace WordHeaven_Web.Controllers
                     reservationId.WarningEmailSent = true;
                 }
             }
-            reservationId.WarningEmailSent = false;
+            return View();
         }
 
 
@@ -438,7 +439,7 @@ namespace WordHeaven_Web.Controllers
                 return NotFound();
             }
 
-            var reserveId = await _reservationRepository.GetByIdAsync(Id);
+            var reserveId = await _reservationRepository.GetReservationId(Id);
             var user = await _userHelper.GetUserByIdAsync(userId);
 
             if (user == null || reserveId == null)
@@ -465,7 +466,7 @@ namespace WordHeaven_Web.Controllers
                 return NotFound();
             }
 
-            var reserveId = await _reservationRepository.GetByIdAsync(Id);
+            var reserveId = await _reservationRepository.GetReservationId(Id);
             var user = await _userHelper.GetUserByIdAsync(userId);
 
             if (user == null || reserveId == null)

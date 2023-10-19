@@ -9,16 +9,15 @@
 <div class="row">
 
     <form asp-action="Modifyreservation">
-        <div as="validation-summary" class="text-danger"></div>
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <input type="hidden" asp-for="@Model.FirstOrDefault().Id" />
 
-        <div class="form-group">
-            <label asp-for="FirstOrDefault().ClientUserName" class="text-bg-info"></label>
-            <p asp-for="Model.FirstOrDefault().ClientUserName" class="form-control"></p>
+        <div class="text-bg-info">
+            @Html.DisplayFor(Model => Model.FirstOrDefault().ClientUserName)
         </div>
-
-        <div class="form-group">
-            <label asp-for="FirstOrDefault().StoreName" class="text-bg-info"></label>
-            <p asp-for="Model.FirstOrDefault().StoreName" class="form-control"></p>
+        <br />
+        <div class="text-bg-info">
+            @Html.DisplayFor(Model => Model.FirstOrDefault().StoreName)
         </div>
 
         <div class="form-check">
@@ -31,7 +30,7 @@
             <label asp-for="FirstOrDefault().DidntReturnTheBook" class="form-check-label"></label>
             @if (Model.FirstOrDefault().DidntReturnTheBook == true && Model.FirstOrDefault().ClientPayedTaxes == false)
             {
-                <a asp-action="SendResponsabilizationEmail">Send Responsabilization Email</a>
+                <a asp-action="SendResponsabilizationEmail" asp-item-id="@Model.FirstOrDefault().Id" >Send Responsabilization Email</a>
             }
         </div>
 
@@ -40,7 +39,7 @@
             <label asp-for="FirstOrDefault().RenewTime" class="form-check-label"></label>
             @if (Model.FirstOrDefault().RenewTime == true)
             {
-                <a asp-action="SendRenewalEmail">Send Renewal Email</a>
+                <a asp-action="SendRenewalEmail" asp-item-id="@Model.FirstOrDefault().Id">Send Renewal Email</a>
             }
         </div>
 

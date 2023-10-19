@@ -22,6 +22,8 @@ namespace WordHeaven_Web.Data.Reservations
 
         Task ModifyStatusReservation(AlterStatusReservationViewModel model);
 
+        Task<Reservation> GetReservationId(int Id);
+
 
         //Helpers
 
